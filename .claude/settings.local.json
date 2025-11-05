@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(move \"c:\\Users\\manoj\\PDFSuit\\app\\(dashboard)\\page.tsx\" \"c:\\Users\\manoj\\PDFSuit\\app\\dashboard\\page.tsx\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

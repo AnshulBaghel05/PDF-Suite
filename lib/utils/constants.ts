@@ -1,0 +1,210 @@
+export const TOOLS = [
+  {
+    id: 'merge-pdf',
+    name: 'Merge PDF',
+    description: 'Combine multiple PDFs into one document',
+    icon: 'Combine',
+    category: 'basic',
+  },
+  {
+    id: 'split-pdf',
+    name: 'Split PDF',
+    description: 'Split pages or ranges into separate files',
+    icon: 'Scissors',
+    category: 'basic',
+  },
+  {
+    id: 'compress-pdf',
+    name: 'Compress PDF',
+    description: 'Reduce file size while preserving quality',
+    icon: 'Minimize2',
+    category: 'basic',
+  },
+  {
+    id: 'rotate-pdf',
+    name: 'Rotate PDF',
+    description: 'Rotate pages left, right or 180°',
+    icon: 'RotateCw',
+    category: 'basic',
+  },
+  {
+    id: 'delete-pages',
+    name: 'Delete Pages',
+    description: 'Remove unwanted pages quickly',
+    icon: 'Trash2',
+    category: 'basic',
+  },
+  {
+    id: 'extract-pages',
+    name: 'Extract Pages',
+    description: 'Export selected pages as new PDF',
+    icon: 'FileOutput',
+    category: 'basic',
+  },
+  {
+    id: 'reorder-pages',
+    name: 'Reorder Pages',
+    description: 'Rearrange pages with drag & drop',
+    icon: 'Move',
+    category: 'basic',
+  },
+  {
+    id: 'image-to-pdf',
+    name: 'Image to PDF',
+    description: 'Convert JPG/PNG to PDF',
+    icon: 'ImagePlus',
+    category: 'convert',
+  },
+  {
+    id: 'edit-pdf',
+    name: 'Edit PDF',
+    description: 'Add or edit text, images and shapes',
+    icon: 'Edit',
+    category: 'edit',
+  },
+  {
+    id: 'add-watermark',
+    name: 'Add Watermark',
+    description: 'Add text or image watermark',
+    icon: 'Droplet',
+    category: 'edit',
+  },
+  {
+    id: 'page-numbers',
+    name: 'Page Numbers',
+    description: 'Add numbering, headers or footers',
+    icon: 'Hash',
+    category: 'edit',
+  },
+  {
+    id: 'protect-pdf',
+    name: 'Protect PDF',
+    description: 'Add password protection',
+    icon: 'Lock',
+    category: 'security',
+  },
+  {
+    id: 'unlock-pdf',
+    name: 'Unlock PDF',
+    description: 'Remove password protection',
+    icon: 'Unlock',
+    category: 'security',
+  },
+  {
+    id: 'edit-metadata',
+    name: 'Edit Metadata',
+    description: 'View, edit or remove PDF metadata',
+    icon: 'Info',
+    category: 'advanced',
+  },
+  {
+    id: 'compare-pdf',
+    name: 'Compare PDFs',
+    description: 'Highlight textual differences',
+    icon: 'GitCompare',
+    category: 'advanced',
+  },
+  {
+    id: 'flatten-form',
+    name: 'Flatten Form',
+    description: 'Convert form fields to static text',
+    icon: 'FileCheck',
+    category: 'advanced',
+  },
+  {
+    id: 'batch-processing',
+    name: 'Batch Processing',
+    description: 'Process multiple PDFs at once',
+    icon: 'Layers',
+    category: 'advanced',
+  },
+  {
+    id: 'pdf-to-text',
+    name: 'PDF to Text',
+    description: 'Extract readable text from PDFs',
+    icon: 'FileText',
+    category: 'convert',
+  },
+  {
+    id: 'pdf-to-image',
+    name: 'PDF to Image',
+    description: 'Convert pages to JPG/PNG',
+    icon: 'Image',
+    category: 'convert',
+  },
+  {
+    id: 'extract-images',
+    name: 'Extract Images',
+    description: 'Pull out embedded images',
+    icon: 'ImageDown',
+    category: 'convert',
+  },
+  {
+    id: 'bruteforce-unlock',
+    name: 'Bruteforce Unlock',
+    description: 'Attempt password recovery',
+    icon: 'KeyRound',
+    category: 'security',
+  },
+  {
+    id: 'pdf-to-word',
+    name: 'PDF to Word',
+    description: 'Convert PDF to DOCX',
+    icon: 'FileType',
+    category: 'convert',
+  },
+  {
+    id: 'word-to-pdf',
+    name: 'Word to PDF',
+    description: 'Convert DOCX to PDF',
+    icon: 'FileType',
+    category: 'convert',
+  },
+];
+
+export const PLANS = {
+  free: {
+    name: 'Free',
+    price: 0,
+    credits: 10,
+    features: [
+      '10 conversions per month',
+      'Max 10MB file size',
+      'Basic tools access',
+      'Watermarked output',
+    ],
+  },
+  pro: {
+    name: 'Pro',
+    price: 499,
+    credits: 100,
+    features: [
+      '100 conversions per month',
+      'Max 50MB file size',
+      'All tools access',
+      'No watermark',
+      'Priority processing',
+      'Batch processing',
+    ],
+  },
+  enterprise: {
+    name: 'Enterprise',
+    price: 1999,
+    credits: -1, // unlimited
+    features: [
+      'Unlimited conversions',
+      'Max 200MB file size',
+      'All tools access',
+      'No watermark',
+      'Priority support',
+      'API access',
+      'Custom branding',
+    ],
+  },
+};
+
+export const FILE_SIZE_LIMITS = {
+  free: 10 * 1024 * 1024, // 10MB
+  pro: 50 * 1024 * 1024, // 50MB
+  enterprise: 200 * 1024 * 1024, // 200MB
+};
