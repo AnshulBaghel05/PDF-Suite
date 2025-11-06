@@ -11,6 +11,9 @@ export interface UserProfile {
   plan_type: 'free' | 'pro' | 'enterprise';
   credits_remaining: number;
   credits_used: number;
+  created_at: string;
+  updated_at?: string;
+  subscription_id?: string | null;
 }
 
 export function useAuth(requireAuth = true) {

@@ -96,6 +96,11 @@ function PDFBruteforceContent() {
     // Close modal
     setShowWarningModal(false);
 
+    if (!file) {
+      setError('Please select a PDF file first');
+      return;
+    }
+
     setProcessing(true);
     setError('');
     setFoundPassword('');
@@ -172,7 +177,7 @@ function PDFBruteforceContent() {
           }
         } else {
           // Dictionary or custom wordlist
-          const passwordArray = Array.isArray(passwords) ? passwords : Array.from(passwords);
+          const passwordArray: string[] = Array.isArray(passwords) ? passwords : Array.from(passwords);
 
           for (const password of passwordArray) {
             attempts++;
