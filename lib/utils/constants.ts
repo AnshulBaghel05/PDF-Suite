@@ -176,7 +176,7 @@ export const PLANS = {
   },
   pro: {
     name: 'Pro',
-    price: 499,
+    price: 99,
     credits: 100,
     features: [
       '100 conversions per month',
@@ -189,7 +189,7 @@ export const PLANS = {
   },
   enterprise: {
     name: 'Enterprise',
-    price: 1999,
+    price: 199,
     credits: -1, // unlimited
     features: [
       'Unlimited conversions',

@@ -86,7 +86,7 @@ Your `.env.local` file is already configured:
    - Visit: http://localhost:3001/pricing
 
 2. **Try "Buy Now" on Pro Plan**
-   - Click "Buy Now" on Pro plan (₹499)
+   - Click "Buy Now" on Pro plan (₹99)
    - Razorpay modal should appear
    - Use Razorpay test card:
      - Card: 4111 1111 1111 1111

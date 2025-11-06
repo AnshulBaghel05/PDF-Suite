@@ -195,7 +195,7 @@ pdfsuit/
 - Basic tools access
 - Watermarked output
 
-### Pro Tier (₹499/month)
+### Pro Tier (₹99/month)
 - 100 conversions per month
 - Max 50MB file size
 - All tools access
@@ -203,7 +203,7 @@ pdfsuit/
 - Priority processing
 - Batch processing
 
-### Enterprise Tier (₹1999/month)
+### Enterprise Tier (₹199/month)
 - Unlimited conversions
 - Max 200MB file size
 - All tools access

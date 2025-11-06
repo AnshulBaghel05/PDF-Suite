@@ -146,12 +146,12 @@ Free: ₹0/month
 - 10MB file limit
 - Watermarked
 
-Pro: ₹499/month
+Pro: ₹99/month
 - 100 conversions
 - 50MB file limit
 - No watermark
 
-Enterprise: ₹1999/month
+Enterprise: ₹199/month
 - Unlimited conversions
 - 200MB file limit
 - API access

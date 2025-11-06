@@ -101,8 +101,8 @@ PDFSuit is now 100% feature-complete with all tools, authentication, payments, d
 ### 8. Pricing & Plans (100%)
 - ✅ Pricing page with 3 tiers
 - ✅ Free: 10 credits, 10MB limit
-- ✅ Pro: 100 credits, 50MB limit, ₹499/month
-- ✅ Enterprise: Unlimited, 200MB limit, ₹1999/month
+- ✅ Pro: 100 credits, 50MB limit, ₹99/month
+- ✅ Enterprise: Unlimited, 200MB limit, ₹199/month
 - ✅ Plan comparison table
 - ✅ Razorpay checkout integration
 
@@ -268,13 +268,13 @@ PDFSuit is now 100% feature-complete with all tools, authentication, payments, d
 - All basic tools
 - Dashboard access
 
-### Pro Tier (₹499/month)
+### Pro Tier (₹99/month)
 - 100 credits/month
 - 50MB file limit
 - All 24 tools
 - Priority support
 
-### Enterprise Tier (₹1999/month)
+### Enterprise Tier (₹199/month)
 - Unlimited credits
 - 200MB file limit
 - All 24 tools

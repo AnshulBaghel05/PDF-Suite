@@ -116,8 +116,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3001
 | Tier | Price | Credits | File Size |
 |------|-------|---------|-----------|
 | **Free** | ₹0 | 10/month | 10MB |
-| **Pro** | ₹499/month | 100/month | 50MB |
-| **Enterprise** | ₹1999/month | Unlimited | 200MB |
+| **Pro** | ₹99/month | 100/month | 50MB |
+| **Enterprise** | ₹199/month | Unlimited | 200MB |
 
 ## 📋 Pre-GitHub Checklist
 
