@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase/client';
 import { FILE_SIZE_LIMITS, PLANS } from '@/lib/utils/constants';
 
 export function useToolAccess() {
-  const { profile, isAuthenticated, loading } = useAuth(true);
+  const { profile, isAuthenticated, loading, refreshProfile } = useAuth(true);
   const [processing, setProcessing] = useState(false);
 
   // Check if user can access a specific tool
@@ -17,20 +17,8 @@ export function useToolAccess() {
 
     const planType = profile.plan_type || 'free';
 
-    // Premium tools only for paid users
-    const premiumTools = [
-      'edit-pdf',
-      'batch-processing',
-      'compare-pdf',
-      'bruteforce-unlock',
-    ];
-
-    if (premiumTools.includes(toolId) && planType === 'free') {
-      return {
-        allowed: false,
-        reason: 'This is a premium feature. Please upgrade to Pro or Enterprise plan.'
-      };
-    }
+    // All tools available for all users (free tier gets all 24 tools)
+    // Only credit limit applies
 
     // Check credits
     if (planType !== 'enterprise' && profile.credits_remaining <= 0) {
@@ -89,6 +77,9 @@ export function useToolAccess() {
             credits_used: newCreditsUsed,
           })
           .eq('id', profile.id);
+
+        // Refresh the profile to update UI with new credits
+        await refreshProfile();
       }
     } catch (error) {
       console.error('Error tracking usage:', error);

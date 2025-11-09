@@ -5,7 +5,7 @@ CREATE TABLE public.profiles (
   full_name TEXT,
   avatar_url TEXT,
   plan_type TEXT DEFAULT 'free' CHECK (plan_type IN ('free', 'pro', 'enterprise')),
-  credits_remaining INTEGER DEFAULT 10,
+  credits_remaining INTEGER DEFAULT 15,
   credits_used INTEGER DEFAULT 0,
   subscription_id TEXT,
   subscription_status TEXT,

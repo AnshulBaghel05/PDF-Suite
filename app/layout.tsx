@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import CookieConsent from "@/components/ui/CookieConsent";
+import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +29,11 @@ export const metadata: Metadata = {
   },
   viewport: "width=device-width, initial-scale=1",
   themeColor: "#DC2626",
+  verification: {
+    google: "ADD_YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE",
+    // When you get your verification code from Google Search Console,
+    // replace the text above with your actual code
+  },
 };
 
 export default function RootLayout({
@@ -40,7 +47,9 @@ export default function RootLayout({
         <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
       </head>
       <body className={`${inter.className} gradient-bg`}>
+        <GoogleAdsenseScript />
         {children}
+        <CookieConsent />
       </body>
     </html>
   );

@@ -190,10 +190,10 @@ pdfsuit/
 ## 💳 Pricing Plans
 
 ### Free Tier
-- 10 conversions per month
+- 15 conversions per month
 - Max 10MB file size
-- Basic tools access
-- Watermarked output
+- **All 24 tools access**
+- Community support
 
 ### Pro Tier (₹99/month)
 - 100 conversions per month

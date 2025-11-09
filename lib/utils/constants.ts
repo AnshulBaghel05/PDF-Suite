@@ -166,12 +166,12 @@ export const PLANS = {
   free: {
     name: 'Free',
     price: 0,
-    credits: 10,
+    credits: 15,
     features: [
-      '10 conversions per month',
+      '15 conversions per month',
       'Max 10MB file size',
-      'Basic tools access',
-      'Watermarked output',
+      'All 24 tools access',
+      'Community support',
     ],
   },
   pro: {
