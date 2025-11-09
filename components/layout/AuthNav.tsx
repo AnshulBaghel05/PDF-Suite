@@ -57,6 +57,15 @@ export default function AuthNav() {
     if (href === '/dashboard') {
       return pathname === '/dashboard';
     }
+    if (href === '/tools') {
+      return pathname === '/tools';
+    }
+    if (href === '/analytics') {
+      return pathname === '/analytics';
+    }
+    if (href === '/settings') {
+      return pathname === '/settings';
+    }
     return pathname?.startsWith(href);
   };
 
