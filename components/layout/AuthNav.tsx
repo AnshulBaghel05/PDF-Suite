@@ -73,28 +73,29 @@ export default function AuthNav() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center space-x-2">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const active = isActive(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                    isActive(item.href)
-                      ? 'bg-primary/10 text-primary border border-primary/30'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                    active
+                      ? 'bg-primary text-white shadow-lg shadow-primary/50'
+                      : 'text-gray-300 hover:text-white hover:bg-gray-800'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span className="font-medium">{item.label}</span>
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
           </div>
 
           {/* User Menu */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             {profile && (
               <div className="glass rounded-lg px-3 py-1.5 border border-gray-700">
                 <span className="text-sm text-gray-400">Credits: </span>
@@ -149,6 +150,15 @@ export default function AuthNav() {
                 </div>
               )}
             </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 border border-red-500/30 hover:border-red-500/50 transition-all font-medium"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
