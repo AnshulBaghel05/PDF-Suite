@@ -140,7 +140,7 @@ export const TOOLS = [
     category: 'convert',
   },
   {
-    id: 'bruteforce-unlock',
+    id: 'pdf-bruteforce',
     name: 'Bruteforce Unlock',
     description: 'Attempt password recovery',
     icon: 'KeyRound',

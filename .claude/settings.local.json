@@ -7,7 +7,11 @@
       "Bash(npm run build:*)",
       "Bash(find:*)",
       "Bash(ls:*)",
-      "Bash(move \"c:\\Users\\manoj\\PDFSuit\\app\\(dashboard)\\page.tsx\" \"c:\\Users\\manoj\\PDFSuit\\app\\dashboard\\page.tsx\")"
+      "Bash(move \"c:\\Users\\manoj\\PDFSuit\\app\\(dashboard)\\page.tsx\" \"c:\\Users\\manoj\\PDFSuit\\app\\dashboard\\page.tsx\")",
+      "Bash(git config:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

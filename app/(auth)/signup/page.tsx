@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
-import { Mail, Lock, User, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, AlertCircle, CheckCircle, Loader2, Check, X } from 'lucide-react';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -15,13 +15,42 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [debugInfo, setDebugInfo] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false,
+  });
 
   // Check if user is already logged in - removed to prevent redirect loop
+
+  // Password validation
+  const validatePassword = (pwd: string) => {
+    setPasswordStrength({
+      length: pwd.length >= 8,
+      uppercase: /[A-Z]/.test(pwd),
+      lowercase: /[a-z]/.test(pwd),
+      number: /[0-9]/.test(pwd),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(pwd),
+    });
+  };
+
+  const isPasswordStrong = () => {
+    return Object.values(passwordStrength).every(v => v === true);
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setDebugInfo('');
+
+    // Validate password strength
+    if (!isPasswordStrong()) {
+      setError('Password does not meet all requirements. Please check the criteria below.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -197,16 +226,55 @@ export default function SignupPage() {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    validatePassword(e.target.value);
+                  }}
                   className="w-full bg-gray-900/50 border border-gray-700 rounded-lg py-3 px-12 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   placeholder="••••••••"
                   required
-                  minLength={6}
+                  minLength={8}
                   autoComplete="new-password"
                   disabled={loading}
                 />
               </div>
-              <p className="text-xs text-gray-400 mt-1">Must be at least 6 characters</p>
+
+              {/* Password Strength Indicators */}
+              {password && (
+                <div className="mt-3 space-y-2 p-3 bg-gray-900/30 border border-gray-700 rounded-lg">
+                  <p className="text-xs text-gray-400 font-medium mb-2">Password must contain:</p>
+                  <div className="space-y-1">
+                    <div className={`flex items-center gap-2 text-xs ${passwordStrength.length ? 'text-green-500' : 'text-gray-500'}`}>
+                      {passwordStrength.length ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                      <span>At least 8 characters</span>
+                    </div>
+                    <div className={`flex items-center gap-2 text-xs ${passwordStrength.uppercase ? 'text-green-500' : 'text-gray-500'}`}>
+                      {passwordStrength.uppercase ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                      <span>One uppercase letter (A-Z)</span>
+                    </div>
+                    <div className={`flex items-center gap-2 text-xs ${passwordStrength.lowercase ? 'text-green-500' : 'text-gray-500'}`}>
+                      {passwordStrength.lowercase ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                      <span>One lowercase letter (a-z)</span>
+                    </div>
+                    <div className={`flex items-center gap-2 text-xs ${passwordStrength.number ? 'text-green-500' : 'text-gray-500'}`}>
+                      {passwordStrength.number ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                      <span>One number (0-9)</span>
+                    </div>
+                    <div className={`flex items-center gap-2 text-xs ${passwordStrength.special ? 'text-green-500' : 'text-gray-500'}`}>
+                      {passwordStrength.special ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                      <span>One special character (!@#$%^&*...)</span>
+                    </div>
+                  </div>
+                  {isPasswordStrong() && (
+                    <div className="mt-2 pt-2 border-t border-gray-700">
+                      <p className="text-xs text-green-500 font-medium flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3" />
+                        Strong password!
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex items-start space-x-2">

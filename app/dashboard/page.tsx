@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase/client';
-import { FileText, CreditCard, Activity, Settings, Clock, TrendingUp } from 'lucide-react';
+import { FileText, CreditCard, Activity, Settings, Clock, TrendingUp, Grid3x3 } from 'lucide-react';
+import AuthNav from '@/components/layout/AuthNav';
 
 interface UsageLog {
   id: string;
@@ -111,21 +112,20 @@ export default function DashboardPage() {
   };
 
   return (
-    <main className="min-h-screen pt-24 pb-12">
-      <div className="section-container">
-        <div className="max-w-7xl mx-auto space-y-8">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gradient">Dashboard</h1>
-              <p className="text-gray-400 mt-2">
-                Welcome back, {profile.full_name || user?.email?.split('@')[0]}
-              </p>
+    <>
+      <AuthNav />
+      <main className="min-h-screen pt-24 pb-12">
+        <div className="section-container">
+          <div className="max-w-7xl mx-auto space-y-8">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-gradient">Dashboard</h1>
+                <p className="text-gray-400 mt-2">
+                  Welcome back, {profile.full_name || user?.email?.split('@')[0]}
+                </p>
+              </div>
             </div>
-            <button onClick={handleSignOut} className="btn-secondary">
-              Sign Out
-            </button>
-          </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -188,9 +188,18 @@ export default function DashboardPage() {
 
           {/* Quick Actions */}
           <div className="glass rounded-xl p-6 border border-gray-800">
-            <div className="flex items-center gap-2 mb-6">
-              <TrendingUp className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-white">Quick Actions</h2>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-semibold text-white">Quick Actions</h2>
+              </div>
+              <a
+                href="/tools"
+                className="flex items-center gap-2 text-primary hover:text-primary-light transition-colors text-sm font-medium"
+              >
+                <Grid3x3 className="w-4 h-4" />
+                View All 24 Tools
+              </a>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <a
@@ -210,6 +219,30 @@ export default function DashboardPage() {
                 className="btn-secondary text-center hover:glow-red transition-all"
               >
                 Compress PDF
+              </a>
+              <a
+                href="/tools/rotate-pdf"
+                className="btn-secondary text-center hover:glow-red transition-all"
+              >
+                Rotate PDF
+              </a>
+              <a
+                href="/tools/pdf-to-word"
+                className="btn-secondary text-center hover:glow-red transition-all"
+              >
+                PDF to Word
+              </a>
+              <a
+                href="/tools/protect-pdf"
+                className="btn-secondary text-center hover:glow-red transition-all"
+              >
+                Protect PDF
+              </a>
+              <a
+                href="/tools/image-to-pdf"
+                className="btn-secondary text-center hover:glow-red transition-all"
+              >
+                Image to PDF
               </a>
               <a
                 href="/pricing"
@@ -319,8 +352,9 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
