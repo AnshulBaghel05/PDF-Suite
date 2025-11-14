@@ -53,8 +53,17 @@ function WordToPDFContent() {
       await processTool('word-to-pdf', 'Word to PDF', [file], async () => {
         const arrayBuffer = await file.arrayBuffer();
 
-        // Extract text and HTML from Word document
-        const result = await mammoth.convertToHtml({ arrayBuffer });
+        // Extract HTML from Word document with styling
+        const result = await mammoth.convertToHtml({
+          arrayBuffer,
+          styleMap: [
+            "p[style-name='Heading 1'] => h1:fresh",
+            "p[style-name='Heading 2'] => h2:fresh",
+            "p[style-name='Heading 3'] => h3:fresh",
+            "r[style-name='Strong'] => strong",
+            "r[style-name='Emphasis'] => em"
+          ]
+        });
         const htmlContent = result.value;
 
         // Create PDF from HTML
@@ -64,31 +73,66 @@ function WordToPDFContent() {
           format: 'a4'
         });
 
-        // Create a temporary div to parse HTML
+        // Create a temporary div to render HTML with proper styling
         const tempDiv = document.createElement('div');
+        tempDiv.style.width = '595px'; // A4 width in pixels at 72 DPI
+        tempDiv.style.padding = '40px';
+        tempDiv.style.fontFamily = 'Arial, sans-serif';
+        tempDiv.style.fontSize = '12px';
+        tempDiv.style.lineHeight = '1.5';
+        tempDiv.style.color = '#000';
+        tempDiv.style.backgroundColor = '#fff';
         tempDiv.innerHTML = htmlContent;
-        const textContent = tempDiv.textContent || tempDiv.innerText || '';
 
-        // Add text to PDF with word wrapping
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const margin = 15;
-        const maxWidth = pageWidth - (margin * 2);
+        // Add CSS for better formatting
+        const style = document.createElement('style');
+        style.innerHTML = `
+          h1 { font-size: 24px; margin: 20px 0 10px; font-weight: bold; }
+          h2 { font-size: 20px; margin: 16px 0 8px; font-weight: bold; }
+          h3 { font-size: 16px; margin: 12px 0 6px; font-weight: bold; }
+          p { margin: 10px 0; }
+          strong { font-weight: bold; }
+          em { font-style: italic; }
+          ul, ol { margin: 10px 0; padding-left: 20px; }
+          li { margin: 5px 0; }
+          img { max-width: 100%; height: auto; }
+        `;
+        tempDiv.appendChild(style);
+        document.body.appendChild(tempDiv);
 
-        doc.setFontSize(11);
-        const lines = doc.splitTextToSize(textContent, maxWidth);
-
-        let yPosition = margin;
-        const lineHeight = 7;
-        const pageHeight = doc.internal.pageSize.getHeight();
-
-        lines.forEach((line: string) => {
-          if (yPosition + lineHeight > pageHeight - margin) {
-            doc.addPage();
-            yPosition = margin;
-          }
-          doc.text(line, margin, yPosition);
-          yPosition += lineHeight;
+        // Use html2canvas to render the HTML
+        const html2canvas = (await import('html2canvas')).default;
+        const canvas = await html2canvas(tempDiv, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
         });
+
+        // Remove temp div
+        document.body.removeChild(tempDiv);
+
+        // Convert canvas to PDF
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        // Add first page
+        doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        // Add additional pages if needed
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          doc.addPage();
+          doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
 
         const pdfOutput = doc.output('blob');
         setPdfBlob(pdfOutput);

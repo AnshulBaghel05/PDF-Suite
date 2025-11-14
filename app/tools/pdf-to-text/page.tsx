@@ -8,8 +8,8 @@ import { saveAs } from 'file-saver';
 import ProtectedTool from '@/components/tools/ProtectedTool';
 import { useToolAccess } from '@/hooks/useToolAccess';
 
-// Set worker path
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+// Set worker path - using unpkg CDN for better reliability
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 function PDFToTextContent() {
   const { profile, processTool, checkFileSize } = useToolAccess();

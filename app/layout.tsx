@@ -30,9 +30,7 @@ export const metadata: Metadata = {
   viewport: "width=device-width, initial-scale=1",
   themeColor: "#DC2626",
   verification: {
-    google: "ADD_YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE",
-    // When you get your verification code from Google Search Console,
-    // replace the text above with your actual code
+    google: "RrCb-PLA6vjZ82f2RxQ3_FFQPdcoujkSkbxIZqYRlFc",
   },
 };
 

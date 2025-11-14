@@ -98,14 +98,14 @@ export const TOOLS = [
     category: 'advanced',
   },
   {
-    id: 'compare-pdf',
+    id: 'compare-pdfs',
     name: 'Compare PDFs',
     description: 'Highlight textual differences',
     icon: 'GitCompare',
     category: 'advanced',
   },
   {
-    id: 'flatten-form',
+    id: 'flatten-forms',
     name: 'Flatten Form',
     description: 'Convert form fields to static text',
     icon: 'FileCheck',

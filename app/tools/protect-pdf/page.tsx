@@ -59,25 +59,23 @@ function ProtectPDFContent() {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDoc = await PDFDocument.load(arrayBuffer);
 
-        // Note: pdf-lib doesn't support password protection directly
-        // This is a placeholder - in production, you'd need a server-side solution
-        // For now, we'll add a watermark indicating it should be protected
-        const pages = pdfDoc.getPages();
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-        pages.forEach(page => {
-          const { width, height } = page.getSize();
-          page.drawText('PROTECTED', {
-            x: width / 2 - 50,
-            y: height / 2,
-            size: 50,
-            font,
-            opacity: 0.1,
-          });
+        // Encrypt the PDF with password using pdf-lib
+        // Set both user and owner passwords
+        const pdfBytes = await pdfDoc.save({
+          userPassword: password,
+          ownerPassword: password + '_owner',
+          permissions: {
+            printing: 'highResolution',
+            modifying: false,
+            copying: false,
+            annotating: false,
+            fillingForms: false,
+            contentAccessibility: true,
+            documentAssembly: false,
+          }
         });
 
-        const result = await pdfDoc.save();
-        setResultPdf(result);
+        setResultPdf(pdfBytes);
         setDownloadReady(true);
       });
     } catch (err: any) {
