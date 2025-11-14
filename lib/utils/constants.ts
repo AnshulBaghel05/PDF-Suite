@@ -160,6 +160,34 @@ export const TOOLS = [
     icon: 'FileType',
     category: 'convert',
   },
+  {
+    id: 'pdf-to-excel',
+    name: 'PDF to Excel',
+    description: 'Convert PDF tables to Excel',
+    icon: 'FileSpreadsheet',
+    category: 'convert',
+  },
+  {
+    id: 'pdf-bookmarks',
+    name: 'PDF Bookmarks',
+    description: 'Add or edit PDF bookmarks',
+    icon: 'Bookmark',
+    category: 'edit',
+  },
+  {
+    id: 'ocr-pdf',
+    name: 'OCR PDF',
+    description: 'Extract text from scanned PDFs',
+    icon: 'ScanText',
+    category: 'advanced',
+  },
+  {
+    id: 'add-signature',
+    name: 'Add Signature',
+    description: 'Sign PDFs digitally',
+    icon: 'PenTool',
+    category: 'edit',
+  },
 ];
 
 export const PLANS = {
@@ -170,7 +198,7 @@ export const PLANS = {
     features: [
       '15 conversions per month',
       'Max 10MB file size',
-      'All 24 tools access',
+      'All 26 tools access',
       'Community support',
     ],
   },

@@ -31,7 +31,7 @@ const nextConfig = {
             },
             // Separate utilities
             utils: {
-              test: /[\\/]node_modules[\\/](file-saver|jszip|mammoth|docx)[\\/]/,
+              test: /[\\/]node_modules[\\/](file-saver|jszip|mammoth|docx|xlsx|tesseract\.js|signature_pad)[\\/]/,
               name: 'utils',
               priority: 20,
               reuseExistingChunk: true,
