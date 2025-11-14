@@ -55,15 +55,8 @@ function WordToPDFContent() {
 
         // Extract HTML from Word document with styling
         const result = await mammoth.convertToHtml({
-          arrayBuffer,
-          styleMap: [
-            "p[style-name='Heading 1'] => h1:fresh",
-            "p[style-name='Heading 2'] => h2:fresh",
-            "p[style-name='Heading 3'] => h3:fresh",
-            "r[style-name='Strong'] => strong",
-            "r[style-name='Emphasis'] => em"
-          ]
-        });
+          arrayBuffer
+        } as any);
         const htmlContent = result.value;
 
         // Create PDF from HTML
