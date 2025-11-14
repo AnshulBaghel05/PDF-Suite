@@ -34,7 +34,7 @@ export default function PricingPage() {
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: order.amount,
-        currency: 'INR',
+        currency: 'GBP',
         name: 'PDFSuit',
         description: `${PLANS[planKey as keyof typeof PLANS].name} Plan`,
         order_id: order.id,
@@ -102,7 +102,7 @@ export default function PricingPage() {
                   <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
                   <div className="flex items-baseline space-x-2">
                     <span className="text-4xl font-bold text-gradient-red">
-                      ₹{plan.price}
+                      £{plan.price}
                     </span>
                     {plan.price > 0 && <span className="text-gray-400">/month</span>}
                   </div>

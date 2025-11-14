@@ -14,8 +14,8 @@ export async function POST(req: NextRequest) {
     });
 
     const order = await razorpay.orders.create({
-      amount: amount * 100, // Convert to paise
-      currency: 'INR',
+      amount: amount * 100, // Convert to pence (smallest currency unit)
+      currency: 'GBP',
       receipt: `receipt_${Date.now()}`,
       notes: {
         planType,
