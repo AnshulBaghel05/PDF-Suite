@@ -45,6 +45,9 @@ export const metadata: Metadata = {
   themeColor: "#DC2626",
   verification: {
     google: "RrCb-PLA6vjZ82f2RxQ3_FFQPdcoujkSkbxIZqYRlFc",
+    other: {
+      'google-adsense-account': 'ca-pub-9444956979294597',
+    },
   },
 };
 
