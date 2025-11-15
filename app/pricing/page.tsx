@@ -42,7 +42,7 @@ export default function PricingPage() {
             {Object.entries(PLANS).map(([key, plan]) => (
               <div
                 key={key}
-                className={`card space-y-6 ${
+                className={`card flex flex-col space-y-6 ${
                   key === 'pro' ? 'border-2 border-primary relative' : ''
                 }`}
               >
@@ -65,7 +65,7 @@ export default function PricingPage() {
                   </div>
                 </div>
 
-                <ul className="space-y-3">
+                <ul className="space-y-3 flex-grow">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start space-x-3">
                       <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
@@ -74,14 +74,16 @@ export default function PricingPage() {
                   ))}
                 </ul>
 
-                <button
-                  onClick={() => handleSelectPlan(key)}
-                  className={`w-full ${
-                    key === 'pro' ? 'btn-primary' : 'btn-secondary'
-                  }`}
-                >
-                  Get Started
-                </button>
+                <div className="pt-2">
+                  <button
+                    onClick={() => handleSelectPlan(key)}
+                    className={`w-full ${
+                      key === 'pro' ? 'btn-primary' : 'btn-secondary'
+                    }`}
+                  >
+                    Get Started
+                  </button>
+                </div>
               </div>
             ))}
           </div>

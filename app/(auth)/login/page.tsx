@@ -14,6 +14,15 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [debugInfo, setDebugInfo] = useState('');
 
+  // Check for error in URL params (e.g., from OAuth callback)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const errorParam = params.get('error');
+    if (errorParam === 'authentication_failed') {
+      setError('Authentication failed. Please try again.');
+    }
+  }, []);
+
   // Check if user is already logged in - removed to prevent redirect loop
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -69,7 +78,11 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 

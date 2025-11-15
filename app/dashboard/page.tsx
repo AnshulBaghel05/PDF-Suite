@@ -198,7 +198,7 @@ export default function DashboardPage() {
                 className="flex items-center gap-2 text-primary hover:text-primary-light transition-colors text-sm font-medium"
               >
                 <Grid3x3 className="w-4 h-4" />
-                View All 24 Tools
+                View All 26 Tools
               </a>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

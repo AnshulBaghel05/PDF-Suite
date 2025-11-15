@@ -22,7 +22,7 @@ export default function HeroSection() {
 
         {/* Subheading */}
         <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto">
-          23+ powerful tools to merge, split, compress, convert, and edit PDFs.
+          26+ powerful tools to merge, split, compress, convert, and edit PDFs.
           <br />
           Fast, secure, and completely private.
         </p>
