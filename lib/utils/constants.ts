@@ -212,7 +212,6 @@ export const PLANS = {
       'All tools access',
       'No watermark',
       'Priority processing',
-      'Batch processing',
     ],
   },
   enterprise: {
@@ -225,8 +224,7 @@ export const PLANS = {
       'All tools access',
       'No watermark',
       'Priority support',
-      'API access',
-      'Custom branding',
+      'Batch processing',
     ],
   },
 };

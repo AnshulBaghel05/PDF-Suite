@@ -1,70 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { PLANS } from '@/lib/utils/constants';
 import { Check, Zap } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function PricingPage() {
-  const [loading, setLoading] = useState<string | null>(null);
+  const router = useRouter();
+  const { user } = useAuth();
 
-  const handleSelectPlan = async (planKey: string) => {
-    if (planKey === 'free') {
-      window.location.href = '/signup';
+  const handleSelectPlan = (planKey: string) => {
+    // Check if user is logged in
+    if (!user) {
+      // Redirect to login with return URL
+      router.push(`/login?redirect=/pricing&plan=${planKey}`);
       return;
     }
 
-    setLoading(planKey);
-
-    try {
-      // Create Razorpay order
-      const response = await fetch('/api/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          planType: planKey,
-          amount: PLANS[planKey as keyof typeof PLANS].price,
-        }),
-      });
-
-      const order = await response.json();
-
-      // Initialize Razorpay checkout
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: order.amount,
-        currency: 'GBP',
-        name: 'PDFSuit',
-        description: `${PLANS[planKey as keyof typeof PLANS].name} Plan`,
-        order_id: order.id,
-        handler: async function (response: any) {
-          // Verify payment
-          const verifyResponse = await fetch('/api/verify-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(response),
-          });
-
-          const result = await verifyResponse.json();
-          if (result.success) {
-            window.location.href = '/dashboard?payment=success';
-          }
-        },
-        theme: {
-          color: '#DC2626',
-        },
-      };
-
-      // @ts-ignore
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
-    } catch (error) {
-      console.error('Payment error:', error);
-      alert('Failed to process payment. Please try again.');
-    } finally {
-      setLoading(null);
-    }
+    // If user is logged in, redirect to dashboard where they can upgrade
+    router.push('/dashboard?upgrade=' + planKey);
   };
 
   return (
@@ -119,12 +76,11 @@ export default function PricingPage() {
 
                 <button
                   onClick={() => handleSelectPlan(key)}
-                  disabled={loading === key}
                   className={`w-full ${
                     key === 'pro' ? 'btn-primary' : 'btn-secondary'
-                  } disabled:opacity-50`}
+                  }`}
                 >
-                  {loading === key ? 'Processing...' : 'Get Started'}
+                  Get Started
                 </button>
               </div>
             ))}
@@ -137,7 +93,7 @@ export default function PricingPage() {
               <span>✓ No file storage</span>
               <span>✓ Complete privacy</span>
               <span>✓ Instant results</span>
-              <span>✓ 23+ PDF tools</span>
+              <span>✓ 26+ PDF tools</span>
             </div>
           </div>
         </div>
