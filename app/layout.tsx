@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import CookieConsent from "@/components/ui/CookieConsent";
 import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,6 +49,7 @@ export default function RootLayout({
         <GoogleAdsenseScript />
         {children}
         <CookieConsent />
+        <Analytics />
       </body>
     </html>
   );
