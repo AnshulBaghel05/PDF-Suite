@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
+import AuthNav from '@/components/layout/AuthNav';
 import Footer from '@/components/layout/Footer';
 import { PLANS } from '@/lib/utils/constants';
 import { Check, Zap } from 'lucide-react';
@@ -10,7 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function PricingPage() {
   const router = useRouter();
-  const { user, loading } = useAuth(false); // Don't require auth for pricing page
+  const { user, loading, isAuthenticated } = useAuth(false); // Don't require auth for pricing page
 
   const handleSelectPlan = (planKey: string) => {
     // Wait for auth check to complete
@@ -25,13 +26,13 @@ export default function PricingPage() {
       return;
     }
 
-    // If user is logged in, redirect to dashboard where they can upgrade
-    router.push('/dashboard?upgrade=' + planKey);
+    // If user is logged in, redirect to checkout page
+    router.push(`/checkout?plan=${planKey}`);
   };
 
   return (
     <>
-      <Header />
+      {isAuthenticated ? <AuthNav /> : <Header />}
       <main className="min-h-screen pt-24 pb-12">
         <div className="section-container">
           <div className="text-center space-y-4 mb-16">

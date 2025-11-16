@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase/client';
-import { FileText, CreditCard, Activity, Settings, Clock, TrendingUp, Grid3x3 } from 'lucide-react';
+import { FileText, CreditCard, Activity, Settings, Clock, TrendingUp, Grid3x3, CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 import AuthNav from '@/components/layout/AuthNav';
 
 interface UsageLog {
@@ -17,9 +17,12 @@ interface UsageLog {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const messageType = searchParams.get('message');
   const { user, profile, loading, isAuthenticated } = useAuth();
   const [usageLogs, setUsageLogs] = useState<UsageLog[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(true);
+  const [showMessage, setShowMessage] = useState(true);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -111,12 +114,90 @@ export default function DashboardPage() {
     }
   };
 
+  const getMessage = () => {
+    switch (messageType) {
+      case 'payment-success':
+        return {
+          type: 'success',
+          icon: CheckCircle,
+          title: 'Payment Successful!',
+          description: 'Your plan has been upgraded successfully. Enjoy your new features!',
+        };
+      case 'plan-updated':
+        return {
+          type: 'success',
+          icon: CheckCircle,
+          title: 'Plan Updated!',
+          description: 'Your subscription plan has been updated successfully.',
+        };
+      case 'already-subscribed':
+        return {
+          type: 'info',
+          icon: AlertCircle,
+          title: 'Already Subscribed',
+          description: 'You already have this plan or a higher tier plan.',
+        };
+      case 'downgrade-not-supported':
+        return {
+          type: 'warning',
+          icon: AlertCircle,
+          title: 'Downgrade Not Available',
+          description: 'Plan downgrades are not currently supported. Please contact support.',
+        };
+      case 'payment-failed':
+        return {
+          type: 'error',
+          icon: XCircle,
+          title: 'Payment Failed',
+          description: 'There was an issue processing your payment. Please try again.',
+        };
+      default:
+        return null;
+    }
+  };
+
+  const message = getMessage();
+
+  const getMessageStyles = (type: string) => {
+    switch (type) {
+      case 'success':
+        return 'bg-green-500/10 border-green-500/50 text-green-400';
+      case 'error':
+        return 'bg-red-500/10 border-red-500/50 text-red-400';
+      case 'warning':
+        return 'bg-yellow-500/10 border-yellow-500/50 text-yellow-400';
+      case 'info':
+        return 'bg-blue-500/10 border-blue-500/50 text-blue-400';
+      default:
+        return 'bg-gray-500/10 border-gray-500/50 text-gray-400';
+    }
+  };
+
   return (
     <>
       <AuthNav />
       <main className="min-h-screen pt-24 pb-12">
         <div className="section-container">
           <div className="max-w-7xl mx-auto space-y-8">
+            {/* Success/Error Message */}
+            {message && showMessage && (
+              <div className={`rounded-xl p-4 border ${getMessageStyles(message.type)} relative`}>
+                <button
+                  onClick={() => setShowMessage(false)}
+                  className="absolute top-4 right-4 text-current opacity-70 hover:opacity-100 transition-opacity"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <div className="flex items-start gap-3 pr-8">
+                  <message.icon className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-white mb-1">{message.title}</h3>
+                    <p className="text-sm opacity-90">{message.description}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
