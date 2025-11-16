@@ -46,7 +46,7 @@ export default function ProtectedTool({ children, toolId, toolName }: ProtectedT
             <h3 className="text-lg font-semibold text-white">Why sign in?</h3>
             <ul className="text-left text-gray-300 space-y-2">
               <li>✓ Track your usage and credits</li>
-              <li>✓ Access all 23+ PDF tools</li>
+              <li>✓ Access all 27 PDF tools</li>
               <li>✓ Keep your processing history</li>
               <li>✓ Enjoy free tier with 10 conversions/month</li>
             </ul>

@@ -17,7 +17,7 @@ export function useToolAccess() {
 
     const planType = profile.plan_type || 'free';
 
-    // All tools available for all users (free tier gets all 24 tools)
+    // All tools available for all users (free tier gets all 27 tools)
     // Only credit limit applies
 
     // Check credits

@@ -198,7 +198,7 @@ export default function ToolsPage() {
                 <div className="text-center max-w-2xl mx-auto">
                   <h3 className="text-2xl font-bold text-white mb-3">Get Started for Free</h3>
                   <p className="text-gray-400 mb-6">
-                    Sign up now and get 15 free credits to use with any of our 24 tools. No credit card required!
+                    Sign up now and get 15 free credits to use with any of our 27 tools. No credit card required!
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link href="/signup" className="btn-primary glow-red">

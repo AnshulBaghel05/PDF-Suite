@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL('https://pdfsuit.com'),
   title: "PDFSuit - Powerful PDF Tools Online | Free PDF Editor & Converter",
-  description: "Transform PDFs with 26+ tools. Merge, split, compress, convert, edit & secure PDFs online. Fast, secure & privacy-focused. Free PDF editor for all.",
+  description: "Transform PDFs with 27 powerful tools. Merge, split, compress, convert, edit & secure PDFs online. Fast, secure & privacy-focused. Free PDF editor for all.",
   keywords: "PDF tools, PDF editor, PDF converter, merge PDF, split PDF, compress PDF, PDF to Word, Word to PDF, online PDF tools, PDF to Excel, OCR PDF, PDF signature, PDF bookmarks",
   authors: [{ name: "PDFSuit" }],
   creator: "PDFSuit",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://pdfsuit.com",
     title: "PDFSuit - Professional PDF Tools Online",
-    description: "Transform PDFs with 26+ professional tools. Fast, secure, and privacy-focused PDF editor & converter.",
+    description: "Transform PDFs with 27 professional tools. Fast, secure, and privacy-focused PDF editor & converter.",
     siteName: "PDFSuit",
     images: [
       {
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "PDFSuit - Professional PDF Tools Online",
-    description: "Transform PDFs with 26+ professional tools. Fast, secure, and privacy-focused.",
+    description: "Transform PDFs with 27 professional tools. Fast, secure, and privacy-focused.",
     images: ["/og-image.png"],
   },
   viewport: "width=device-width, initial-scale=1",
