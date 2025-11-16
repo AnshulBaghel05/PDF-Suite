@@ -7,6 +7,9 @@ import { supabase } from '@/lib/supabase/client';
 import { FileText, CreditCard, Activity, Settings, Clock, TrendingUp, Grid3x3, CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 import AuthNav from '@/components/layout/AuthNav';
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 interface UsageLog {
   id: string;
   tool_name: string;

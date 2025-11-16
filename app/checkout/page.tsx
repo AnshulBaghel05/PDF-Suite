@@ -9,6 +9,9 @@ import { PLANS } from '@/lib/utils/constants';
 import { Check, CreditCard, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 // Extend Window interface for Razorpay
 declare global {
   interface Window {
