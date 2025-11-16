@@ -10,13 +10,18 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function PricingPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading } = useAuth(false); // Don't require auth for pricing page
 
   const handleSelectPlan = (planKey: string) => {
+    // Wait for auth check to complete
+    if (loading) {
+      return;
+    }
+
     // Check if user is logged in
     if (!user) {
-      // Redirect to login with return URL
-      router.push(`/login?redirect=/pricing&plan=${planKey}`);
+      // Redirect to signup/login with return URL
+      router.push(`/signup?redirect=/pricing&plan=${planKey}`);
       return;
     }
 
@@ -76,11 +81,12 @@ export default function PricingPage() {
 
                 <button
                   onClick={() => handleSelectPlan(key)}
+                  disabled={loading}
                   className={`w-full ${
                     key === 'pro' ? 'btn-primary' : 'btn-secondary'
-                  }`}
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                  Get Started
+                  {loading ? 'Loading...' : 'Get Started'}
                 </button>
               </div>
             ))}
@@ -93,7 +99,7 @@ export default function PricingPage() {
               <span>✓ No file storage</span>
               <span>✓ Complete privacy</span>
               <span>✓ Instant results</span>
-              <span>✓ 26+ PDF tools</span>
+              <span>✓ 27 PDF tools</span>
             </div>
           </div>
         </div>

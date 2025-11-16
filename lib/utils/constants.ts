@@ -198,7 +198,7 @@ export const PLANS = {
     features: [
       '15 conversions per month',
       'Max 10MB file size',
-      'All 26 tools access',
+      'All 27 tools access',
       'Community support',
     ],
   },
