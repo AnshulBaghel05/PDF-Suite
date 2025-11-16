@@ -1,14 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase/client';
 import { FileText, CreditCard, Activity, Settings, Clock, TrendingUp, Grid3x3, CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 import AuthNav from '@/components/layout/AuthNav';
-
-// Force dynamic rendering for this page
-export const dynamic = 'force-dynamic';
 
 interface UsageLog {
   id: string;
@@ -18,7 +15,7 @@ interface UsageLog {
   created_at: string;
 }
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const messageType = searchParams.get('message');
@@ -440,5 +437,20 @@ export default function DashboardPage() {
         </div>
       </main>
     </>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading dashboard...</p>
+        </div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }

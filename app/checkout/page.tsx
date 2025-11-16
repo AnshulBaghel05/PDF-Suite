@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import AuthNav from '@/components/layout/AuthNav';
@@ -9,9 +9,6 @@ import { PLANS } from '@/lib/utils/constants';
 import { Check, CreditCard, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 
-// Force dynamic rendering for this page
-export const dynamic = 'force-dynamic';
-
 // Extend Window interface for Razorpay
 declare global {
   interface Window {
@@ -19,7 +16,7 @@ declare global {
   }
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const planKey = searchParams.get('plan') || 'pro';
@@ -304,5 +301,17 @@ export default function CheckoutPage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }
