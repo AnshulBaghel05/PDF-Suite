@@ -58,8 +58,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-white font-semibold mb-1">Email Us</h3>
-                    <p className="text-gray-400 text-sm">support@pdfsuit.com</p>
-                    <p className="text-gray-400 text-sm">hello@pdfsuit.com</p>
+                    <p className="text-gray-400 text-sm">darshitp091@gmail.com</p>
+                    <p className="text-gray-400 text-sm">darshitp0562@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -84,7 +84,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-white font-semibold mb-1">Call Us</h3>
-                    <p className="text-gray-400 text-sm">+91 (555) 123-4567</p>
+                    <p className="text-gray-400 text-sm">+91 9256451591</p>
                     <p className="text-gray-400 text-sm">Mon-Fri, 9 AM - 6 PM</p>
                   </div>
                 </div>
