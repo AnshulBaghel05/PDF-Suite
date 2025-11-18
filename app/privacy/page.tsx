@@ -175,7 +175,7 @@ export default function PrivacyPage() {
                   If you have questions about this privacy policy, please contact us at:
                 </p>
                 <ul className="list-none pl-0 space-y-2">
-                  <li>Email: privacy@pdfsuit.com</li>
+                  <li>Email: darshitp091@gmail.com</li>
                   <li>Contact Page: <a href="/contact" className="text-primary hover:underline">www.pdfsuit.com/contact</a></li>
                 </ul>
               </section>

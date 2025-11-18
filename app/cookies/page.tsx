@@ -187,7 +187,7 @@ export default function CookiesPage() {
                   If you have questions about our cookie policy:
                 </p>
                 <ul className="list-none pl-0 space-y-2">
-                  <li>Email: privacy@pdfsuit.com</li>
+                  <li>Email: darshitp091@gmail.com</li>
                   <li>Contact Page: <a href="/contact" className="text-primary hover:underline">www.pdfsuit.com/contact</a></li>
                 </ul>
               </section>

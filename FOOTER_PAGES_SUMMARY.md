@@ -34,9 +34,9 @@ All pages referenced in the footer navigation have been successfully created, ro
 - **Features**:
   - Contact form with validation (name, email, subject, message)
   - Multiple contact methods:
-    - Email: support@pdfsuit.com, hello@pdfsuit.com
+    - Email: darshitp091@gmail.com, darshitp0562@gmail.com
     - Live Chat: Mon-Fri, 9 AM - 6 PM IST
-    - Phone: +91 (555) 123-4567
+    - Phone: +91 9256451591
     - Office: Mumbai, Maharashtra, India
   - Form submission with success/error states
   - Link to FAQ page
