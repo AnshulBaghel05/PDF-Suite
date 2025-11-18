@@ -260,7 +260,7 @@ export default function SecurityPage() {
                   If you discover a security vulnerability, please report it to us responsibly:
                 </p>
                 <ul className="space-y-2">
-                  <li>Email: security@pdfsuit.com</li>
+                  <li>Email: darshitp091@gmail.com</li>
                   <li>Include detailed steps to reproduce the issue</li>
                   <li>Give us reasonable time to address the issue before public disclosure</li>
                 </ul>

@@ -198,7 +198,7 @@ All notable changes to PDFSuit will be documented in this file.
 
 For issues or questions about this update:
 - GitHub Issues: https://github.com/AnshulBaghel05/PDF-Suite/issues
-- Email: support@pdfsuit.com
+- Email: darshitp091@gmail.com
 - Contact Form: https://pdfsuit.com/contact
 
 ---

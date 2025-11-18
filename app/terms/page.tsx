@@ -188,7 +188,7 @@ export default function TermsPage() {
                   For questions about these terms, contact us at:
                 </p>
                 <ul className="list-none pl-0 space-y-2">
-                  <li>Email: legal@pdfsuit.com</li>
+                  <li>Email: darshitp091@gmail.com</li>
                   <li>Contact Page: <a href="/contact" className="text-primary hover:underline">www.pdfsuit.com/contact</a></li>
                 </ul>
               </section>
