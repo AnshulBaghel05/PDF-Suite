@@ -25,7 +25,9 @@ function DashboardContent() {
   const [showMessage, setShowMessage] = useState(true);
 
   useEffect(() => {
+    console.log('[Dashboard] Auth state:', { loading, isAuthenticated, user: user?.email });
     if (!loading && !isAuthenticated) {
+      console.log('[Dashboard] Not authenticated, redirecting to login');
       router.push('/login');
     }
   }, [loading, isAuthenticated, router]);

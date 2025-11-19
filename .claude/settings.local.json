@@ -20,7 +20,10 @@
       "Bash(fi)",
       "Bash(cp:*)",
       "Bash(git pull:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(\"app/checkout/page.tsx\")",
+      "Bash(echo:*)",
+      "Bash(\"app/dashboard/page.tsx\")"
     ],
     "deny": [],
     "ask": []

@@ -29,9 +29,12 @@ export function useAuth(requireAuth = true) {
 
   const checkAuth = async () => {
     try {
+      console.log('[useAuth] Checking authentication...');
       const { data: { user } } = await supabase.auth.getUser();
+      console.log('[useAuth] User:', user);
 
       if (!user) {
+        console.log('[useAuth] No user found, requireAuth:', requireAuth);
         if (requireAuth) {
           router.push('/login?redirect=' + window.location.pathname);
         }
@@ -40,10 +43,12 @@ export function useAuth(requireAuth = true) {
         return;
       }
 
+      console.log('[useAuth] User authenticated:', user.email);
       setUser(user);
       setIsAuthenticated(true);
 
       // Fetch profile
+      console.log('[useAuth] Fetching profile...');
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -51,16 +56,18 @@ export function useAuth(requireAuth = true) {
         .single();
 
       if (error) {
-        console.error('Error fetching profile:', error);
+        console.error('[useAuth] Error fetching profile:', error);
       } else if (profile) {
+        console.log('[useAuth] Profile loaded:', profile.plan_type);
         setProfile(profile);
       }
     } catch (error) {
-      console.error('Auth check error:', error);
+      console.error('[useAuth] Auth check error:', error);
       if (requireAuth) {
         router.push('/login');
       }
     } finally {
+      console.log('[useAuth] Auth check complete, loading set to false');
       setLoading(false);
     }
   };

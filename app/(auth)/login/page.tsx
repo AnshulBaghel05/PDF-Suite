@@ -24,11 +24,14 @@ export default function LoginPage() {
 
     try {
       setDebugInfo('Attempting to sign in...');
+      console.log('Login attempt starting...');
 
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password,
       });
+
+      console.log('Sign in response:', { data, error: signInError });
 
       if (signInError) {
         console.error('Login error:', signInError);
@@ -40,9 +43,12 @@ export default function LoginPage() {
       }
 
       setDebugInfo('Login successful! Session created.');
+      console.log('Session created:', data.session);
 
       // Verify the session was stored
       const { data: { session } } = await supabase.auth.getSession();
+
+      console.log('Session verification:', session);
 
       if (!session) {
         throw new Error('Session not found after login');
@@ -51,7 +57,9 @@ export default function LoginPage() {
       setDebugInfo('Session verified. Redirecting to dashboard...');
 
       // Small delay to ensure session is fully established
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      console.log('Redirecting to dashboard...');
 
       // Use window.location for a full page reload to ensure auth state is fresh
       window.location.href = '/dashboard';
