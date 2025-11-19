@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
+import AuthNav from '@/components/layout/AuthNav';
 import Footer from '@/components/layout/Footer';
 import { PLANS } from '@/lib/utils/constants';
 import { Check, Zap } from 'lucide-react';
@@ -35,18 +36,25 @@ export default function PricingPage() {
 
   const checkAuth = async () => {
     try {
+      console.log('[Pricing] Starting auth check...');
       const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
+      console.log('[Pricing] Session result:', { hasSession: !!session, email: session?.user?.email });
+
+      const authStatus = !!session;
+      console.log('[Pricing] Setting isAuthenticated to:', authStatus);
+      setIsAuthenticated(authStatus);
 
       if (session) {
         setUserEmail(session.user.email || '');
         setUserName(session.user.user_metadata?.full_name || '');
+        console.log('[Pricing] User info set:', { email: session.user.email, name: session.user.user_metadata?.full_name });
       }
     } catch (error) {
-      console.error('Error checking auth:', error);
+      console.error('[Pricing] Error checking auth:', error);
       setIsAuthenticated(false);
     } finally {
       setCheckingAuth(false);
+      console.log('[Pricing] Auth check completed');
     }
   };
 
@@ -111,9 +119,11 @@ export default function PricingPage() {
     razorpay.open();
   };
 
+  console.log('[Pricing] Rendering with state:', { isAuthenticated, checkingAuth, userEmail });
+
   return (
     <>
-      <Header />
+      {isAuthenticated ? <AuthNav /> : <Header />}
       <main className="min-h-screen pt-24 pb-12">
         <div className="section-container">
           <div className="text-center space-y-4 mb-16">
