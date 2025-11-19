@@ -24,17 +24,17 @@ export default function LoginPage() {
 
     try {
       setDebugInfo('Attempting to sign in...');
-      console.log('Login attempt starting...');
+      console.log('[Login] Starting login attempt...');
 
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password,
       });
 
-      console.log('Sign in response:', { data, error: signInError });
+      console.log('[Login] Sign in response:', { hasSession: !!data.session, error: signInError });
 
       if (signInError) {
-        console.error('Login error:', signInError);
+        console.error('[Login] Login error:', signInError);
         throw signInError;
       }
 
@@ -42,30 +42,34 @@ export default function LoginPage() {
         throw new Error('No session returned from login');
       }
 
-      setDebugInfo('Login successful! Session created.');
-      console.log('Session created:', data.session);
+      console.log('[Login] Session created successfully');
+      setDebugInfo('Login successful! Setting up your session...');
 
-      // Verify the session was stored
+      // Wait for localStorage to be updated
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Verify the session was stored in localStorage
       const { data: { session } } = await supabase.auth.getSession();
-
-      console.log('Session verification:', session);
+      console.log('[Login] Session verification:', { hasSession: !!session, email: session?.user?.email });
 
       if (!session) {
+        console.error('[Login] Session not found in storage after login');
         throw new Error('Session not found after login');
       }
 
-      setDebugInfo('Session verified. Redirecting to dashboard...');
+      console.log('[Login] Session verified in localStorage');
+      setDebugInfo('Session ready. Redirecting to dashboard...');
 
-      // Small delay to ensure session is fully established
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Additional delay to ensure session is fully persisted
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      console.log('Redirecting to dashboard...');
+      console.log('[Login] Navigating to dashboard...');
 
-      // Use window.location for a full page reload to ensure auth state is fresh
-      window.location.href = '/dashboard';
+      // Use router.push instead of window.location to avoid full page reload
+      router.push('/dashboard');
 
     } catch (err: any) {
-      console.error('Login failed:', err);
+      console.error('[Login] Login failed:', err);
       setError(err.message || 'Failed to login. Please check your credentials.');
       setDebugInfo('');
       setLoading(false);

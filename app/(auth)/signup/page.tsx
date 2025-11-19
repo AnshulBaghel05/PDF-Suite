@@ -55,6 +55,7 @@ export default function SignupPage() {
 
     try {
       setDebugInfo('Creating your account...');
+      console.log('[Signup] Starting signup attempt...');
 
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: email.trim(),
@@ -66,8 +67,10 @@ export default function SignupPage() {
         },
       });
 
+      console.log('[Signup] Signup response:', { hasUser: !!data.user, error: signUpError });
+
       if (signUpError) {
-        console.error('Signup error:', signUpError);
+        console.error('[Signup] Signup error:', signUpError);
         throw signUpError;
       }
 
@@ -76,35 +79,44 @@ export default function SignupPage() {
       }
 
       setSuccess(true);
-      setDebugInfo('Account created successfully!');
+      console.log('[Signup] User created:', data.user.email);
 
       // Check if email confirmation is required
       if (data.user.confirmed_at) {
-        setDebugInfo('Account verified! Redirecting to dashboard...');
+        setDebugInfo('Account verified! Setting up your session...');
+        console.log('[Signup] User already confirmed');
       } else {
-        setDebugInfo('Please check your email to verify your account.');
+        setDebugInfo('Account created! Checking session...');
+        console.log('[Signup] Email confirmation may be required');
       }
 
-      // Wait a bit for session to establish
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Wait for session to establish
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Verify session
       const { data: { session } } = await supabase.auth.getSession();
+      console.log('[Signup] Session check:', { hasSession: !!session, email: session?.user?.email });
 
       if (session) {
-        setDebugInfo('Session created. Redirecting to dashboard...');
+        console.log('[Signup] Session created, navigating to dashboard');
+        setDebugInfo('Session ready. Redirecting to dashboard...');
+
+        // Additional delay to ensure session is persisted
         await new Promise(resolve => setTimeout(resolve, 500));
-        window.location.href = '/dashboard';
+
+        console.log('[Signup] Navigating to dashboard...');
+        router.push('/dashboard');
       } else {
         // No session means email confirmation is required
+        console.log('[Signup] No session, email confirmation required');
         setDebugInfo('Please check your email to verify your account, then login.');
         setTimeout(() => {
-          window.location.href = '/login';
+          router.push('/login');
         }, 3000);
       }
 
     } catch (err: any) {
-      console.error('Signup failed:', err);
+      console.error('[Signup] Signup failed:', err);
       setError(err.message || 'Failed to create account. Please try again.');
       setDebugInfo('');
       setLoading(false);

@@ -24,6 +24,7 @@ export function useAuth(requireAuth = true) {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [initialCheckDone, setInitialCheckDone] = useState(false);
+  const [preventRedirect, setPreventRedirect] = useState(false);
 
   useEffect(() => {
     // Initial auth check
@@ -35,9 +36,11 @@ export function useAuth(requireAuth = true) {
         console.log('[useAuth] Auth state changed:', event, session?.user?.email);
 
         if (event === 'SIGNED_IN' && session) {
-          console.log('[useAuth] User signed in');
+          console.log('[useAuth] User signed in via event');
+          setPreventRedirect(true); // Prevent any pending redirect
           setUser(session.user);
           setIsAuthenticated(true);
+          setInitialCheckDone(true);
           await fetchProfile(session.user.id);
           setLoading(false);
         } else if (event === 'SIGNED_OUT') {
@@ -45,12 +48,19 @@ export function useAuth(requireAuth = true) {
           setUser(null);
           setProfile(null);
           setIsAuthenticated(false);
+          setPreventRedirect(false);
           setLoading(false);
           if (requireAuth) {
             router.push('/login');
           }
         } else if (event === 'TOKEN_REFRESHED') {
           console.log('[useAuth] Token refreshed');
+        } else if (event === 'INITIAL_SESSION' && session) {
+          console.log('[useAuth] Initial session detected');
+          setPreventRedirect(true);
+          setUser(session.user);
+          setIsAuthenticated(true);
+          await fetchProfile(session.user.id);
         }
       }
     );
@@ -62,15 +72,30 @@ export function useAuth(requireAuth = true) {
 
   // Separate effect to handle redirect after initial check
   useEffect(() => {
+    // Don't redirect if preventRedirect flag is set (user just logged in)
+    if (preventRedirect) {
+      console.log('[useAuth] Redirect prevented - user authenticated');
+      return;
+    }
+
     if (initialCheckDone && !loading && !isAuthenticated && requireAuth) {
-      console.log('[useAuth] Initial check done, not authenticated, redirecting to login');
-      // Add a small delay to prevent race condition with login redirect
+      console.log('[useAuth] Initial check done, not authenticated, will redirect to login');
+
+      // Only redirect if we're not already on the login/signup page
+      const currentPath = window.location.pathname;
+      if (currentPath === '/login' || currentPath === '/signup') {
+        console.log('[useAuth] Already on auth page, skipping redirect');
+        return;
+      }
+
+      // Add a delay to prevent race condition with login redirect
       const timeout = setTimeout(() => {
+        console.log('[useAuth] Executing redirect to login');
         router.push('/login?redirect=' + window.location.pathname);
-      }, 100);
+      }, 2000); // Increased to 2 seconds
       return () => clearTimeout(timeout);
     }
-  }, [initialCheckDone, loading, isAuthenticated, requireAuth, router]);
+  }, [initialCheckDone, loading, isAuthenticated, requireAuth, router, preventRedirect]);
 
   const fetchProfile = async (userId: string) => {
     try {
