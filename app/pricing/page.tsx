@@ -3,36 +3,117 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
-import AuthNav from '@/components/layout/AuthNav';
 import Footer from '@/components/layout/Footer';
 import { PLANS } from '@/lib/utils/constants';
 import { Check, Zap } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase/client';
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function PricingPage() {
   const router = useRouter();
-  const { user, loading, isAuthenticated } = useAuth(false); // Don't require auth for pricing page
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
 
-  const handleSelectPlan = (planKey: string) => {
-    // Wait for auth check to complete
-    if (loading) {
-      return;
+  useEffect(() => {
+    checkAuth();
+    loadRazorpayScript();
+  }, []);
+
+  const loadRazorpayScript = () => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+  };
+
+  const checkAuth = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+
+      if (session) {
+        setUserEmail(session.user.email || '');
+        setUserName(session.user.user_metadata?.full_name || '');
+      }
+    } catch (error) {
+      console.error('Error checking auth:', error);
+      setIsAuthenticated(false);
+    } finally {
+      setCheckingAuth(false);
     }
+  };
 
+  const handleSelectPlan = async (planKey: string) => {
     // Check if user is logged in
-    if (!user) {
+    if (!isAuthenticated) {
       // Redirect to login with return URL
       router.push(`/login?redirect=/pricing&plan=${planKey}`);
       return;
     }
 
-    // If user is logged in, redirect to dashboard with upgrade parameter
-    router.push(`/dashboard?upgrade=${planKey}`);
+    // If user is logged in and selecting free plan, redirect to dashboard
+    if (planKey === 'free') {
+      router.push('/dashboard');
+      return;
+    }
+
+    // For paid plans, open Razorpay payment
+    openRazorpayPayment(planKey);
+  };
+
+  const openRazorpayPayment = (planKey: string) => {
+    const plan = PLANS[planKey as keyof typeof PLANS];
+
+    if (!plan) return;
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_your_key_id', // Replace with your Razorpay key
+      amount: plan.price * 100, // Amount in paise (multiply by 100)
+      currency: 'GBP',
+      name: 'PDFSuit',
+      description: `${plan.name} Plan - Monthly Subscription`,
+      image: '/logo.png', // Your logo
+      handler: async function (response: any) {
+        console.log('Payment successful:', response);
+
+        // Payment successful, update user subscription
+        try {
+          // Here you would call your backend API to verify payment and update subscription
+          // For now, we'll just redirect to dashboard with success message
+          router.push('/dashboard?message=payment-success');
+        } catch (error) {
+          console.error('Error updating subscription:', error);
+          router.push('/dashboard?message=payment-failed');
+        }
+      },
+      prefill: {
+        name: userName,
+        email: userEmail,
+      },
+      theme: {
+        color: '#EF4444', // Your primary color (red)
+      },
+      modal: {
+        ondismiss: function() {
+          console.log('Payment cancelled by user');
+        }
+      }
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
   };
 
   return (
     <>
-      {isAuthenticated ? <AuthNav /> : <Header />}
+      <Header />
       <main className="min-h-screen pt-24 pb-12">
         <div className="section-container">
           <div className="text-center space-y-4 mb-16">
@@ -82,12 +163,11 @@ export default function PricingPage() {
 
                 <button
                   onClick={() => handleSelectPlan(key)}
-                  disabled={loading}
                   className={`w-full ${
                     key === 'pro' ? 'btn-primary' : 'btn-secondary'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  }`}
                 >
-                  {loading ? 'Loading...' : 'Get Started'}
+                  Get Started
                 </button>
               </div>
             ))}
