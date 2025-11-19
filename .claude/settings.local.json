@@ -18,7 +18,9 @@
       "Bash(if [ ! -d public ])",
       "Bash(then mkdir public)",
       "Bash(fi)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "ask": []

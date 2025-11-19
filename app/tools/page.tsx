@@ -103,7 +103,7 @@ export default function ToolsPage() {
             <div className="text-center space-y-4">
               <h1 className="text-4xl md:text-5xl font-bold text-gradient">All PDF Tools</h1>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                Choose from 24 powerful tools to transform your PDFs
+                Choose from 26 powerful tools to transform your PDFs
               </p>
               {isAuthenticated && profile && (
                 <div className="glass rounded-lg px-4 py-2 inline-block">

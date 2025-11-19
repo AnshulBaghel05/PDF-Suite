@@ -93,7 +93,7 @@ export default function AboutPage() {
                 We set out to build a different kind of PDF toolkit—one that respects your privacy, works instantly, and provides all the tools you need without the bloat. Using modern web technologies, we created a platform where everything happens right in your browser.
               </p>
               <p>
-                Today, PDFSuit offers 24 professional PDF tools, all working seamlessly to help you merge, split, compress, convert, and manage your documents. And we're just getting started.
+                Today, PDFSuit offers 26 professional PDF tools, all working seamlessly to help you merge, split, compress, convert, and manage your documents. And we're just getting started.
               </p>
             </div>
           </div>

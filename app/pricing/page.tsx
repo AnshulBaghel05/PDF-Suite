@@ -21,13 +21,13 @@ export default function PricingPage() {
 
     // Check if user is logged in
     if (!user) {
-      // Redirect to signup/login with return URL
-      router.push(`/signup?redirect=/pricing&plan=${planKey}`);
+      // Redirect to login with return URL
+      router.push(`/login?redirect=/pricing&plan=${planKey}`);
       return;
     }
 
-    // If user is logged in, redirect to checkout page
-    router.push(`/checkout?plan=${planKey}`);
+    // If user is logged in, redirect to dashboard with upgrade parameter
+    router.push(`/dashboard?upgrade=${planKey}`);
   };
 
   return (
@@ -48,7 +48,7 @@ export default function PricingPage() {
             {Object.entries(PLANS).map(([key, plan]) => (
               <div
                 key={key}
-                className={`card space-y-6 ${
+                className={`card space-y-6 flex flex-col ${
                   key === 'pro' ? 'border-2 border-primary relative' : ''
                 }`}
               >
@@ -71,7 +71,7 @@ export default function PricingPage() {
                   </div>
                 </div>
 
-                <ul className="space-y-3">
+                <ul className="space-y-3 flex-grow">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start space-x-3">
                       <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
@@ -100,7 +100,7 @@ export default function PricingPage() {
               <span>✓ No file storage</span>
               <span>✓ Complete privacy</span>
               <span>✓ Instant results</span>
-              <span>✓ 27 PDF tools</span>
+              <span>✓ 26 PDF tools</span>
             </div>
           </div>
         </div>
