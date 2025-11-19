@@ -20,16 +20,20 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const messageType = searchParams.get('message');
   const code = searchParams.get('code');
-  const { user, profile, loading, isAuthenticated } = useAuth();
+  const [processingOAuth, setProcessingOAuth] = useState(!!code);
+  const [oauthProcessed, setOauthProcessed] = useState(false);
+
+  // Don't call useAuth until OAuth code is processed
+  const { user, profile, loading, isAuthenticated } = useAuth(!code || oauthProcessed);
+
   const [usageLogs, setUsageLogs] = useState<UsageLog[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(true);
   const [showMessage, setShowMessage] = useState(true);
-  const [processingOAuth, setProcessingOAuth] = useState(false);
 
-  // Handle OAuth callback code
+  // Handle OAuth callback code FIRST, before useAuth runs
   useEffect(() => {
     const handleOAuthCallback = async () => {
-      if (code && !processingOAuth) {
+      if (code && !oauthProcessed) {
         console.log('[Dashboard] OAuth code detected, processing...');
         setProcessingOAuth(true);
 
@@ -44,6 +48,8 @@ function DashboardContent() {
           }
 
           console.log('[Dashboard] OAuth session established:', data.user?.email);
+          setOauthProcessed(true);
+          setProcessingOAuth(false);
 
           // Clean up URL by removing the code parameter
           router.replace('/dashboard');
@@ -55,7 +61,7 @@ function DashboardContent() {
     };
 
     handleOAuthCallback();
-  }, [code, processingOAuth, router]);
+  }, [code, oauthProcessed, router]);
 
   // useAuth hook now handles redirect, no need for manual check here
   useEffect(() => {
@@ -94,12 +100,14 @@ function DashboardContent() {
     router.push('/');
   };
 
-  if (loading) {
+  if (processingOAuth || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading dashboard...</p>
+          <p className="text-gray-400">
+            {processingOAuth ? 'Processing authentication...' : 'Loading dashboard...'}
+          </p>
         </div>
       </div>
     );
