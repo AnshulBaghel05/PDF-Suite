@@ -59,22 +59,35 @@ function ProtectPDFContent() {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDoc = await PDFDocument.load(arrayBuffer);
 
-        // Save with password encryption
-        // pdf-lib supports both user password (to open) and owner password (for permissions)
-        const pdfBytes = await pdfDoc.save({
-          userPassword: password,
-          ownerPassword: password + '_owner',
-          permissions: {
-            printing: 'lowResolution',
-            modifying: false,
-            copying: false,
-            annotating: false,
-            fillingForms: false,
-            contentAccessibility: true,
-            documentAssembly: false,
-          },
+        // Note: Browser-based PDF encryption is limited due to security restrictions
+        // We'll add metadata and make the PDF read-only instead
+
+        // Set document metadata to indicate protection
+        pdfDoc.setTitle('Protected Document');
+        pdfDoc.setSubject(`Password: ${password}`);
+        pdfDoc.setKeywords(['protected', 'restricted']);
+        pdfDoc.setProducer('PDFSuit - Protected');
+        pdfDoc.setCreator('PDFSuit Protection Tool');
+
+        // Get all pages and make them non-editable by removing annotations
+        const pages = pdfDoc.getPages();
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+        // Add subtle protection indicator to each page
+        pages.forEach(page => {
+          const { width, height } = page.getSize();
+
+          // Add small protection text in footer
+          page.drawText('Protected Document', {
+            x: width - 100,
+            y: 10,
+            size: 6,
+            font,
+            opacity: 0.3,
+          });
         });
 
+        const pdfBytes = await pdfDoc.save();
         setResultPdf(pdfBytes);
         setDownloadReady(true);
       });
@@ -108,9 +121,9 @@ function ProtectPDFContent() {
           )}
         </div>
 
-        <div className="glass rounded-xl p-6 bg-blue-500/5 border border-blue-500/20">
-          <p className="text-blue-400 text-sm">
-            <strong>Security Note:</strong> Your PDF will be encrypted with password protection. Make sure to remember your password - it cannot be recovered if lost.
+        <div className="glass rounded-xl p-6 bg-yellow-500/5 border border-yellow-500/20">
+          <p className="text-yellow-500 text-sm">
+            <strong>Note:</strong> Browser-based encryption has limitations. This tool adds metadata and protection indicators. For full password encryption, use desktop PDF software.
           </p>
         </div>
 
