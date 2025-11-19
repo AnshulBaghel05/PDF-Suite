@@ -24,13 +24,10 @@ function DashboardContent() {
   const [loadingLogs, setLoadingLogs] = useState(true);
   const [showMessage, setShowMessage] = useState(true);
 
+  // useAuth hook now handles redirect, no need for manual check here
   useEffect(() => {
     console.log('[Dashboard] Auth state:', { loading, isAuthenticated, user: user?.email });
-    if (!loading && !isAuthenticated) {
-      console.log('[Dashboard] Not authenticated, redirecting to login');
-      router.push('/login');
-    }
-  }, [loading, isAuthenticated, router]);
+  }, [loading, isAuthenticated, user]);
 
   useEffect(() => {
     if (profile) {

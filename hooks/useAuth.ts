@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 export interface UserProfile {
   id: string;
@@ -22,37 +23,62 @@ export function useAuth(requireAuth = true) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
   useEffect(() => {
+    // Initial auth check
     checkAuth();
-  }, []);
 
-  const checkAuth = async () => {
-    try {
-      console.log('[useAuth] Checking authentication...');
-      const { data: { user } } = await supabase.auth.getUser();
-      console.log('[useAuth] User:', user);
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event: AuthChangeEvent, session: Session | null) => {
+        console.log('[useAuth] Auth state changed:', event, session?.user?.email);
 
-      if (!user) {
-        console.log('[useAuth] No user found, requireAuth:', requireAuth);
-        if (requireAuth) {
-          router.push('/login?redirect=' + window.location.pathname);
+        if (event === 'SIGNED_IN' && session) {
+          console.log('[useAuth] User signed in');
+          setUser(session.user);
+          setIsAuthenticated(true);
+          await fetchProfile(session.user.id);
+          setLoading(false);
+        } else if (event === 'SIGNED_OUT') {
+          console.log('[useAuth] User signed out');
+          setUser(null);
+          setProfile(null);
+          setIsAuthenticated(false);
+          setLoading(false);
+          if (requireAuth) {
+            router.push('/login');
+          }
+        } else if (event === 'TOKEN_REFRESHED') {
+          console.log('[useAuth] Token refreshed');
         }
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
       }
+    );
 
-      console.log('[useAuth] User authenticated:', user.email);
-      setUser(user);
-      setIsAuthenticated(true);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [requireAuth]);
 
-      // Fetch profile
-      console.log('[useAuth] Fetching profile...');
+  // Separate effect to handle redirect after initial check
+  useEffect(() => {
+    if (initialCheckDone && !loading && !isAuthenticated && requireAuth) {
+      console.log('[useAuth] Initial check done, not authenticated, redirecting to login');
+      // Add a small delay to prevent race condition with login redirect
+      const timeout = setTimeout(() => {
+        router.push('/login?redirect=' + window.location.pathname);
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [initialCheckDone, loading, isAuthenticated, requireAuth, router]);
+
+  const fetchProfile = async (userId: string) => {
+    try {
+      console.log('[useAuth] Fetching profile for user:', userId);
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user.id)
+        .eq('id', userId)
         .single();
 
       if (error) {
@@ -62,13 +88,40 @@ export function useAuth(requireAuth = true) {
         setProfile(profile);
       }
     } catch (error) {
-      console.error('[useAuth] Auth check error:', error);
-      if (requireAuth) {
-        router.push('/login');
+      console.error('[useAuth] Error fetching profile:', error);
+    }
+  };
+
+  const checkAuth = async () => {
+    try {
+      console.log('[useAuth] Initial auth check...');
+
+      // First try to get session from storage
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log('[useAuth] Session:', session?.user?.email);
+
+      if (!session) {
+        console.log('[useAuth] No session found');
+        setIsAuthenticated(false);
+        setLoading(false);
+        setInitialCheckDone(true);
+        return;
       }
-    } finally {
-      console.log('[useAuth] Auth check complete, loading set to false');
+
+      console.log('[useAuth] Session found:', session.user.email);
+      setUser(session.user);
+      setIsAuthenticated(true);
+
+      // Fetch profile
+      await fetchProfile(session.user.id);
+
       setLoading(false);
+      setInitialCheckDone(true);
+    } catch (error) {
+      console.error('[useAuth] Auth check error:', error);
+      setIsAuthenticated(false);
+      setLoading(false);
+      setInitialCheckDone(true);
     }
   };
 
