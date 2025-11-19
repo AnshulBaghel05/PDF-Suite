@@ -78,15 +78,23 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      console.log('[Login] Starting Google OAuth login...');
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          redirectTo: `${window.location.origin}/dashboard`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 
+      console.log('[Login] OAuth initiated:', { url: data?.url, error });
+
       if (error) throw error;
     } catch (err: any) {
+      console.error('[Login] Google login error:', err);
       setError(err.message || 'Failed to login with Google');
     }
   };

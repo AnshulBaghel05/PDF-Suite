@@ -126,15 +126,23 @@ export default function SignupPage() {
 
   const handleGoogleSignup = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      console.log('[Signup] Starting Google OAuth signup...');
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          redirectTo: `${window.location.origin}/dashboard`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 
+      console.log('[Signup] OAuth initiated:', { url: data?.url, error });
+
       if (error) throw error;
     } catch (err: any) {
+      console.error('[Signup] Google signup error:', err);
       setError(err.message || 'Failed to sign up with Google');
     }
   };
