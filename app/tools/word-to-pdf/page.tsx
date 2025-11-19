@@ -55,11 +55,16 @@ function WordToPDFContent() {
 
         // Extract HTML from Word document with styling
         const result = await mammoth.convertToHtml({
-          arrayBuffer
+          arrayBuffer,
+          styleMap: [
+            "p[style-name='Heading 1'] => h1:fresh",
+            "p[style-name='Heading 2'] => h2:fresh",
+            "p[style-name='Heading 3'] => h3:fresh",
+          ]
         } as any);
         const htmlContent = result.value;
 
-        // Create PDF from HTML
+        // Create PDF from HTML with better rendering
         const doc = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
@@ -68,45 +73,53 @@ function WordToPDFContent() {
 
         // Create a temporary div to render HTML with proper styling
         const tempDiv = document.createElement('div');
-        tempDiv.style.width = '595px'; // A4 width in pixels at 72 DPI
-        tempDiv.style.padding = '40px';
+        tempDiv.style.width = '210mm'; // A4 width
+        tempDiv.style.padding = '20mm';
         tempDiv.style.fontFamily = 'Arial, sans-serif';
-        tempDiv.style.fontSize = '12px';
-        tempDiv.style.lineHeight = '1.5';
+        tempDiv.style.fontSize = '11pt';
+        tempDiv.style.lineHeight = '1.6';
         tempDiv.style.color = '#000';
         tempDiv.style.backgroundColor = '#fff';
+        tempDiv.style.boxSizing = 'border-box';
         tempDiv.innerHTML = htmlContent;
 
-        // Add CSS for better formatting
+        // Add CSS for better formatting with proper spacing
         const style = document.createElement('style');
         style.innerHTML = `
-          h1 { font-size: 24px; margin: 20px 0 10px; font-weight: bold; }
-          h2 { font-size: 20px; margin: 16px 0 8px; font-weight: bold; }
-          h3 { font-size: 16px; margin: 12px 0 6px; font-weight: bold; }
-          p { margin: 10px 0; }
-          strong { font-weight: bold; }
-          em { font-style: italic; }
-          ul, ol { margin: 10px 0; padding-left: 20px; }
-          li { margin: 5px 0; }
-          img { max-width: 100%; height: auto; }
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          h1 { font-size: 18pt; margin: 16pt 0 12pt; font-weight: bold; line-height: 1.4; }
+          h2 { font-size: 15pt; margin: 14pt 0 10pt; font-weight: bold; line-height: 1.4; }
+          h3 { font-size: 13pt; margin: 12pt 0 8pt; font-weight: bold; line-height: 1.4; }
+          p { margin: 0 0 12pt 0; line-height: 1.6; }
+          strong, b { font-weight: bold; }
+          em, i { font-style: italic; }
+          ul, ol { margin: 0 0 12pt 0; padding-left: 20pt; }
+          li { margin: 6pt 0; line-height: 1.6; }
+          img { max-width: 100%; height: auto; margin: 10pt 0; }
+          table { width: 100%; border-collapse: collapse; margin: 12pt 0; }
+          td, th { padding: 6pt; border: 1px solid #ddd; }
         `;
-        tempDiv.appendChild(style);
+        document.head.appendChild(style);
+        tempDiv.appendChild(style.cloneNode(true));
         document.body.appendChild(tempDiv);
 
-        // Use html2canvas to render the HTML
+        // Use html2canvas to render the HTML with higher quality
         const html2canvas = (await import('html2canvas')).default;
         const canvas = await html2canvas(tempDiv, {
-          scale: 2,
+          scale: 3, // Higher quality
           useCORS: true,
           logging: false,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          windowWidth: tempDiv.scrollWidth,
+          windowHeight: tempDiv.scrollHeight
         });
 
-        // Remove temp div
+        // Remove temp elements
         document.body.removeChild(tempDiv);
+        document.head.removeChild(style);
 
-        // Convert canvas to PDF
-        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        // Convert canvas to PDF with better quality
+        const imgData = canvas.toDataURL('image/png', 1.0);
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const imgWidth = pageWidth;
@@ -116,14 +129,14 @@ function WordToPDFContent() {
         let position = 0;
 
         // Add first page
-        doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
 
         // Add additional pages if needed
         while (heightLeft > 0) {
           position = heightLeft - imgHeight;
           doc.addPage();
-          doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
           heightLeft -= pageHeight;
         }
 

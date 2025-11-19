@@ -9,8 +9,8 @@ import { saveAs } from 'file-saver';
 import ProtectedTool from '@/components/tools/ProtectedTool';
 import { useToolAccess } from '@/hooks/useToolAccess';
 
-// Set worker path - using unpkg CDN for better reliability
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+// Set worker path - using local worker file for reliability
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 function PDFToImageContent() {
   const { profile, processTool, checkFileSize } = useToolAccess();

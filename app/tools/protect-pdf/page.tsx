@@ -59,36 +59,22 @@ function ProtectPDFContent() {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDoc = await PDFDocument.load(arrayBuffer);
 
-        // Note: Browser-based PDF encryption is limited
-        // For full password protection, use desktop software or server-side processing
-        // This adds a watermark to indicate protection intent
-        const pages = pdfDoc.getPages();
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-        // Add watermark to each page
-        pages.forEach(page => {
-          const { width, height } = page.getSize();
-
-          // Add "PROTECTED" watermark
-          page.drawText('PROTECTED', {
-            x: width / 2 - 80,
-            y: height / 2,
-            size: 60,
-            font,
-            opacity: 0.08,
-          });
-
-          // Add password hint in footer
-          page.drawText(`Password: ${password}`, {
-            x: 20,
-            y: 20,
-            size: 8,
-            font,
-            opacity: 0.3,
-          });
+        // Save with password encryption
+        // pdf-lib supports both user password (to open) and owner password (for permissions)
+        const pdfBytes = await pdfDoc.save({
+          userPassword: password,
+          ownerPassword: password + '_owner',
+          permissions: {
+            printing: 'lowResolution',
+            modifying: false,
+            copying: false,
+            annotating: false,
+            fillingForms: false,
+            contentAccessibility: true,
+            documentAssembly: false,
+          },
         });
 
-        const pdfBytes = await pdfDoc.save();
         setResultPdf(pdfBytes);
         setDownloadReady(true);
       });
@@ -122,9 +108,9 @@ function ProtectPDFContent() {
           )}
         </div>
 
-        <div className="glass rounded-xl p-6 bg-yellow-500/5 border border-yellow-500/20">
-          <p className="text-yellow-500 text-sm">
-            <strong>Note:</strong> Password encryption requires server-side processing. This demo version adds a protection watermark. Upgrade to Pro for full encryption features.
+        <div className="glass rounded-xl p-6 bg-blue-500/5 border border-blue-500/20">
+          <p className="text-blue-400 text-sm">
+            <strong>Security Note:</strong> Your PDF will be encrypted with password protection. Make sure to remember your password - it cannot be recovered if lost.
           </p>
         </div>
 

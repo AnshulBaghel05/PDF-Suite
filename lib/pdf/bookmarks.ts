@@ -28,7 +28,8 @@ export async function addBookmarksToPDF(
   }
 
   // Create outline dictionary (bookmarks structure)
-  const outlineDict = pdfDoc.context.obj({});
+  const outlineDict = PDFDict.withContext(pdfDoc.context);
+  outlineDict.set(PDFName.of('Type'), PDFName.of('Outlines'));
   const outlineRef = pdfDoc.context.register(outlineDict);
 
   const outlineItems: PDFRef[] = [];
@@ -37,26 +38,32 @@ export async function addBookmarksToPDF(
   for (let i = 0; i < bookmarks.length; i++) {
     const bookmark = bookmarks[i];
     const page = pages[bookmark.pageNumber - 1];
-    const pageRef = pdfDoc.context.register(page.node);
+    const pageRef = page.ref;
 
     // Create destination array [page /XYZ left top zoom]
-    const dest = pdfDoc.context.obj([pageRef, PDFName.of('XYZ'), 0, 842, 0]);
+    const destArray = PDFArray.withContext(pdfDoc.context);
+    destArray.push(pageRef);
+    destArray.push(PDFName.of('XYZ'));
+    destArray.push(pdfDoc.context.obj(0));
+    destArray.push(pdfDoc.context.obj(page.getHeight()));
+    destArray.push(pdfDoc.context.obj(0));
 
     // Create outline item
-    const itemDict = pdfDoc.context.obj({
-      Title: bookmark.title,
-      Parent: outlineRef,
-      Dest: dest,
-    });
+    const itemDict = PDFDict.withContext(pdfDoc.context);
+    itemDict.set(PDFName.of('Title'), pdfDoc.context.obj(bookmark.title));
+    itemDict.set(PDFName.of('Parent'), outlineRef);
+    itemDict.set(PDFName.of('Dest'), destArray);
+
+    const itemRef = pdfDoc.context.register(itemDict);
 
     // Add Prev/Next references
     if (i > 0) {
       itemDict.set(PDFName.of('Prev'), outlineItems[i - 1]);
       const prevDict = pdfDoc.context.lookup(outlineItems[i - 1]) as PDFDict;
-      prevDict.set(PDFName.of('Next'), pdfDoc.context.register(itemDict));
+      prevDict.set(PDFName.of('Next'), itemRef);
     }
 
-    outlineItems.push(pdfDoc.context.register(itemDict));
+    outlineItems.push(itemRef);
   }
 
   // Set First and Last in outline dictionary

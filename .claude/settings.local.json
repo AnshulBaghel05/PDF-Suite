@@ -11,7 +11,14 @@
       "Bash(git config:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npx tsc:*)",
+      "Bash(test:*)",
+      "Bash(npm i:*)",
+      "Bash(if [ ! -d public ])",
+      "Bash(then mkdir public)",
+      "Bash(fi)",
+      "Bash(cp:*)"
     ],
     "deny": [],
     "ask": []

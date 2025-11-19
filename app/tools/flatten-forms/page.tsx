@@ -53,20 +53,41 @@ function FlattenFormsContent() {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDoc = await PDFDocument.load(arrayBuffer);
 
-        // Flatten the form by getting and resaving the form
+        // Get the form
         const form = pdfDoc.getForm();
-        const fields = form.getFields();
 
-        // This flattens the form fields
-        fields.forEach(field => {
-          try {
-            field.enableReadOnly();
-          } catch (e) {
-            // Some fields might not support this
-          }
-        });
+        try {
+          // Flatten the form - this converts form fields to static content
+          form.flatten();
+        } catch (error) {
+          // If flatten() doesn't exist, manually remove form fields
+          const fields = form.getFields();
 
-        const result = await pdfDoc.save();
+          // Mark all fields as read-only and remove their interactive properties
+          fields.forEach(field => {
+            try {
+              // Get the widget annotations
+              const widgets = (field as any).acroField?.getWidgets?.() || [];
+
+              // Remove each widget from its page
+              widgets.forEach((widget: any) => {
+                try {
+                  const widgetDict = widget.dict;
+                  // Remove the interactive flag
+                  widgetDict.delete(widgetDict.context.obj('Ff'));
+                  // Set as read-only
+                  field.enableReadOnly();
+                } catch (e) {
+                  console.error('Error processing widget:', e);
+                }
+              });
+            } catch (e) {
+              console.error('Error flattening field:', e);
+            }
+          });
+        }
+
+        const result = await pdfDoc.save({ useObjectStreams: false });
         setResultPdf(result);
         setDownloadReady(true);
       });
