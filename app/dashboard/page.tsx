@@ -19,49 +19,10 @@ function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const messageType = searchParams.get('message');
-  const code = searchParams.get('code');
-  const [processingOAuth, setProcessingOAuth] = useState(!!code);
-  const [oauthProcessed, setOauthProcessed] = useState(false);
-
-  // Don't call useAuth until OAuth code is processed
-  const { user, profile, loading, isAuthenticated } = useAuth(!code || oauthProcessed);
-
+  const { user, profile, loading, isAuthenticated } = useAuth();
   const [usageLogs, setUsageLogs] = useState<UsageLog[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(true);
   const [showMessage, setShowMessage] = useState(true);
-
-  // Handle OAuth callback code FIRST, before useAuth runs
-  useEffect(() => {
-    const handleOAuthCallback = async () => {
-      if (code && !oauthProcessed) {
-        console.log('[Dashboard] OAuth code detected, processing...');
-        setProcessingOAuth(true);
-
-        try {
-          // Exchange code for session
-          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-
-          if (error) {
-            console.error('[Dashboard] Error exchanging code:', error);
-            router.replace('/login?error=auth_failed');
-            return;
-          }
-
-          console.log('[Dashboard] OAuth session established:', data.user?.email);
-          setOauthProcessed(true);
-          setProcessingOAuth(false);
-
-          // Clean up URL by removing the code parameter
-          router.replace('/dashboard');
-        } catch (err) {
-          console.error('[Dashboard] OAuth processing error:', err);
-          router.replace('/login?error=server_error');
-        }
-      }
-    };
-
-    handleOAuthCallback();
-  }, [code, oauthProcessed, router]);
 
   // useAuth hook now handles redirect, no need for manual check here
   useEffect(() => {
@@ -100,14 +61,12 @@ function DashboardContent() {
     router.push('/');
   };
 
-  if (processingOAuth || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-400">
-            {processingOAuth ? 'Processing authentication...' : 'Loading dashboard...'}
-          </p>
+          <p className="text-gray-400">Loading dashboard...</p>
         </div>
       </div>
     );
