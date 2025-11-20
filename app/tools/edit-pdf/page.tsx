@@ -411,7 +411,7 @@ function EditPDFContent() {
 
         // Save the PDF
         const pdfBytes = await pdfDocCopy.save();
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
         saveAs(blob, 'edited.pdf');
       });
     } catch (err: any) {

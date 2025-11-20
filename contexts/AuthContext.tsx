@@ -8,8 +8,12 @@ interface UserProfile {
   id: string;
   email: string;
   full_name: string;
-  plan: string;
+  plan_type: string;
+  credits_remaining: number;
+  credits_used?: number;
+  subscription_id?: string;
   created_at: string;
+  updated_at?: string;
 }
 
 interface AuthContextType {

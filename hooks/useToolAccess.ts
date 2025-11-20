@@ -38,7 +38,7 @@ export function useToolAccess() {
     }
 
     const planType = profile.plan_type || 'free';
-    const maxSize = FILE_SIZE_LIMITS[planType];
+    const maxSize = FILE_SIZE_LIMITS[planType as keyof typeof FILE_SIZE_LIMITS];
 
     if (fileSize > maxSize) {
       const maxSizeMB = Math.round(maxSize / (1024 * 1024));
@@ -68,7 +68,7 @@ export function useToolAccess() {
       // Deduct credit if successful and not enterprise
       if (success && profile.plan_type !== 'enterprise') {
         const newCreditsRemaining = Math.max(0, profile.credits_remaining - 1);
-        const newCreditsUsed = profile.credits_used + 1;
+        const newCreditsUsed = (profile.credits_used || 0) + 1;
 
         await supabase
           .from('profiles')
