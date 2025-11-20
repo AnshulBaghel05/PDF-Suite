@@ -94,12 +94,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (currentSession) {
           setSession(currentSession);
           setUser(currentSession.user);
-          await fetchProfile(currentSession.user.id);
+          setLoading(false); // Set loading false BEFORE profile fetch
+          fetchProfile(currentSession.user.id); // Let profile load in background
+        } else {
+          setLoading(false);
         }
       } catch (err) {
         console.error('Auth initialization error:', err);
         setError('Failed to initialize authentication');
-      } finally {
         setLoading(false);
       }
     };

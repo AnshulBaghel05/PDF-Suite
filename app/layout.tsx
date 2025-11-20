@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import CookieConsent from "@/components/ui/CookieConsent";
-import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 import { Analytics } from "@vercel/analytics/next";
 import { ClientProviders } from "@/components/providers/ClientProviders";
 
@@ -46,9 +45,6 @@ export const metadata: Metadata = {
   themeColor: "#DC2626",
   verification: {
     google: "RrCb-PLA6vjZ82f2RxQ3_FFQPdcoujkSkbxIZqYRlFc",
-    other: {
-      'google-adsense-account': 'ca-pub-9444956979294597',
-    },
   },
 };
 
@@ -100,7 +96,6 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} gradient-bg`}>
-        <GoogleAdsenseScript />
         <ClientProviders>
           {children}
         </ClientProviders>

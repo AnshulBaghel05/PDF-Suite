@@ -26,7 +26,9 @@
       "Bash(\"app/dashboard/page.tsx\")",
       "Bash(taskkill:*)",
       "Bash(if exist .next rmdir /s /q .next)",
-      "Bash(xargs rm:*)"
+      "Bash(xargs rm:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

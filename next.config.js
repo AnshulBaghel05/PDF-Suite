@@ -44,7 +44,7 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()'
+            value: 'camera=(self "https://checkout.razorpay.com"), microphone=(self "https://checkout.razorpay.com"), geolocation=()'
           }
         ],
       },

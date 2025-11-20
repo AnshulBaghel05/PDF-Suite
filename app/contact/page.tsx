@@ -1,3 +1,16 @@
+/*
+ * ⚠️ IMPORTANT FOR CLIENTS: Before setting up email functionality
+ *
+ * 1. FIRST, change the email addresses below (lines 77-78) to YOUR email addresses
+ * 2. THEN, follow the RESEND_SETUP.md guide to configure email sending
+ *
+ * Current email addresses that will receive contact form submissions:
+ * - darshitp091@gmail.com
+ * - darshitp0562@gmail.com
+ *
+ * After changing emails here, also update CONTACT_EMAIL_TO in .env.local
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -13,17 +26,38 @@ export default function ContactPage() {
     message: '',
   });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('sending');
+    setErrorMessage('');
 
-    // Simulate API call
-    setTimeout(() => {
-      setStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setStatus('idle'), 3000);
-    }, 1500);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        // Reset to idle after 5 seconds
+        setTimeout(() => setStatus('idle'), 5000);
+      } else {
+        setStatus('error');
+        setErrorMessage(data.message || 'Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Contact form error:', error);
+      setStatus('error');
+      setErrorMessage('Failed to send message. Please try again later.');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -180,7 +214,7 @@ export default function ContactPage() {
 
                   {status === 'error' && (
                     <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg">
-                      Oops! Something went wrong. Please try again later.
+                      {errorMessage || 'Oops! Something went wrong. Please try again later.'}
                     </div>
                   )}
 
