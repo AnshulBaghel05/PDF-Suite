@@ -1,7 +1,6 @@
 'use client';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { Loader2, Lock } from 'lucide-react';
 import Link from 'next/link';
 
@@ -12,8 +11,7 @@ interface ProtectedToolProps {
 }
 
 export default function ProtectedTool({ children, toolId, toolName }: ProtectedToolProps) {
-  const { isAuthenticated, loading, profile } = useAuth(false);
-  const router = useRouter();
+  const { isAuthenticated, loading, profile } = useAuthContext();
 
   // Show loading state
   if (loading) {

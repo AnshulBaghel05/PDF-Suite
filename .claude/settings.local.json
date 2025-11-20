@@ -24,7 +24,9 @@
       "Bash(\"app/checkout/page.tsx\")",
       "Bash(echo:*)",
       "Bash(\"app/dashboard/page.tsx\")",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(if exist .next rmdir /s /q .next)",
+      "Bash(xargs rm:*)"
     ],
     "deny": [],
     "ask": []

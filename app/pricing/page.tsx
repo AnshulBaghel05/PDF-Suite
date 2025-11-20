@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuthContext } from '@/contexts/AuthContext';
 import Header from '@/components/layout/Header';
 import AuthNav from '@/components/layout/AuthNav';
 import Footer from '@/components/layout/Footer';
 import { PLANS } from '@/lib/utils/constants';
 import { Check, Zap } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 
 declare global {
   interface Window {
@@ -17,13 +17,9 @@ declare global {
 
 export default function PricingPage() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
-  const [userEmail, setUserEmail] = useState('');
-  const [userName, setUserName] = useState('');
+  const { isAuthenticated, loading, user } = useAuthContext();
 
   useEffect(() => {
-    checkAuth();
     loadRazorpayScript();
   }, []);
 
@@ -32,30 +28,6 @@ export default function PricingPage() {
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
     document.body.appendChild(script);
-  };
-
-  const checkAuth = async () => {
-    try {
-      console.log('[Pricing] Starting auth check...');
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log('[Pricing] Session result:', { hasSession: !!session, email: session?.user?.email });
-
-      const authStatus = !!session;
-      console.log('[Pricing] Setting isAuthenticated to:', authStatus);
-      setIsAuthenticated(authStatus);
-
-      if (session) {
-        setUserEmail(session.user.email || '');
-        setUserName(session.user.user_metadata?.full_name || '');
-        console.log('[Pricing] User info set:', { email: session.user.email, name: session.user.user_metadata?.full_name });
-      }
-    } catch (error) {
-      console.error('[Pricing] Error checking auth:', error);
-      setIsAuthenticated(false);
-    } finally {
-      setCheckingAuth(false);
-      console.log('[Pricing] Auth check completed');
-    }
   };
 
   const handleSelectPlan = async (planKey: string) => {
@@ -81,20 +53,20 @@ export default function PricingPage() {
 
     if (!plan) return;
 
+    const userEmail = user?.email || '';
+    const userName = user?.user_metadata?.full_name || '';
+
     const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_your_key_id', // Replace with your Razorpay key
-      amount: plan.price * 100, // Amount in paise (multiply by 100)
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_your_key_id',
+      amount: plan.price * 100,
       currency: 'GBP',
       name: 'PDFSuit',
       description: `${plan.name} Plan - Monthly Subscription`,
-      image: '/logo.png', // Your logo
+      image: '/logo.png',
       handler: async function (response: any) {
         console.log('Payment successful:', response);
 
-        // Payment successful, update user subscription
         try {
-          // Here you would call your backend API to verify payment and update subscription
-          // For now, we'll just redirect to dashboard with success message
           router.push('/dashboard?message=payment-success');
         } catch (error) {
           console.error('Error updating subscription:', error);
@@ -106,7 +78,7 @@ export default function PricingPage() {
         email: userEmail,
       },
       theme: {
-        color: '#EF4444', // Your primary color (red)
+        color: '#EF4444',
       },
       modal: {
         ondismiss: function() {
@@ -118,8 +90,6 @@ export default function PricingPage() {
     const razorpay = new window.Razorpay(options);
     razorpay.open();
   };
-
-  console.log('[Pricing] Rendering with state:', { isAuthenticated, checkingAuth, userEmail });
 
   return (
     <>

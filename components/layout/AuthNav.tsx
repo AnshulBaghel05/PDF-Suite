@@ -14,20 +14,16 @@ import {
   LogOut,
   User
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 export default function AuthNav() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { profile, user } = useAuth();
+  const { profile, user, signOut } = useAuthContext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
+    await signOut();
   };
 
   const navItems = [

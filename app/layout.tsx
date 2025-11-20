@@ -4,6 +4,7 @@ import "./globals.css";
 import CookieConsent from "@/components/ui/CookieConsent";
 import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 import { Analytics } from "@vercel/analytics/next";
+import { ClientProviders } from "@/components/providers/ClientProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -100,7 +101,9 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} gradient-bg`}>
         <GoogleAdsenseScript />
-        {children}
+        <ClientProviders>
+          {children}
+        </ClientProviders>
         <CookieConsent />
         <Analytics />
       </body>
