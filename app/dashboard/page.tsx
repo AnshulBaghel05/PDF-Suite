@@ -15,6 +15,78 @@ interface UsageLog {
   created_at: string;
 }
 
+// Skeleton component moved OUTSIDE to prevent hydration mismatch
+function DashboardSkeleton() {
+  return (
+    <>
+      <AuthNav />
+      <main className="min-h-screen pt-24 pb-12">
+        <div className="section-container">
+          <div className="max-w-7xl mx-auto space-y-8 animate-pulse">
+            {/* Header skeleton */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <div className="h-10 bg-gray-700/50 rounded-lg w-48 mb-2"></div>
+                <div className="h-5 bg-gray-700/30 rounded w-64"></div>
+              </div>
+            </div>
+
+            {/* Stats Grid skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="glass rounded-xl p-6 border border-gray-800">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-700/30 rounded w-24"></div>
+                      <div className="h-8 bg-gray-700/50 rounded w-20"></div>
+                    </div>
+                    <div className="p-3 bg-gray-700/30 rounded-lg w-12 h-12"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Quick Actions skeleton */}
+            <div className="glass rounded-xl p-6 border border-gray-800">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-5 h-5 bg-gray-700/50 rounded"></div>
+                <div className="h-6 bg-gray-700/50 rounded w-32"></div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                  <div key={i} className="h-10 bg-gray-700/30 rounded-lg"></div>
+                ))}
+              </div>
+            </div>
+
+            {/* Recent Activity skeleton */}
+            <div className="glass rounded-xl p-6 border border-gray-800">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-5 h-5 bg-gray-700/50 rounded"></div>
+                <div className="h-6 bg-gray-700/50 rounded w-36"></div>
+              </div>
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg border border-gray-800">
+                    <div className="flex items-center gap-4">
+                      <div className="w-2 h-2 bg-gray-700/50 rounded-full"></div>
+                      <div className="space-y-2">
+                        <div className="h-4 bg-gray-700/50 rounded w-32"></div>
+                        <div className="h-3 bg-gray-700/30 rounded w-48"></div>
+                      </div>
+                    </div>
+                    <div className="h-6 bg-gray-700/30 rounded-full w-16"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}
+
 function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -61,19 +133,19 @@ function DashboardContent() {
     router.push('/');
   };
 
+  // Show skeleton while loading auth or profile
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
-  if (!isAuthenticated || !profile) {
+  // Redirect handled by useAuth hook
+  if (!isAuthenticated) {
     return null;
+  }
+
+  // Show skeleton if profile is still loading
+  if (!profile) {
+    return <DashboardSkeleton />;
   }
 
   const formatBytes = (bytes: number) => {
